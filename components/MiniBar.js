@@ -1,0 +1,1 @@
+"use strict";const e=require("../common/vendor.js"),t={__name:"MiniBar",props:{pct:{type:Number,default:0},color:{type:String,default:"#16a34a"},trackColor:{type:String,default:"#e5e7eb"},size:{type:Number,default:14}},setup:e=>(t,r)=>({a:e.pct+"%",b:e.color,c:e.size+"rpx",d:e.trackColor})},r=e._export_sfc(t,[["__scopeId","data-v-bbc4ee99"]]);wx.createComponent(r);

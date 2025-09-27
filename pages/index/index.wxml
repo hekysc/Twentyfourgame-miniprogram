@@ -1,0 +1,99 @@
+<view class="{{['page', 'col', 'data-v-a09269df', az && 'booted']}}" style="{{aA}}" bindtouchstart="{{aB}}" bindtouchmove="{{aC}}" bindtouchend="{{aD}}" bindtouchcancel="{{aE}}">
+  <view id="gameTopBox" class="game-header top-fixed data-v-a09269df">
+    <view class="topbar data-v-a09269df">
+      <view class="user-chip data-v-a09269df" hover-class="user-chip-hover" bindtap="{{g}}">
+        <block wx:if="{{a}}">
+          <image class="user-chip-avatar data-v-a09269df" src="{{b}}" mode="aspectFill" binderror="{{c}}" />
+        </block>
+        <view wx:else class="user-chip-fallback data-v-a09269df" style="{{'background-color:' + e}}">{{d}}</view><text class="user-chip-name data-v-a09269df">{{f}}</text>
+      </view>
+    </view>
+    <view class="mode-bar data-v-a09269df"><button class="{{['btn', 'mode-toggle-btn', 'data-v-a09269df', i]}}" bindtap="{{j}}">{{h}}</button>
+      <view class="data-v-a09269df" style="flex:1"><button class="btn btn-secondary deck-toggle-btn data-v-a09269df" bindtap="{{l}}">{{k}}</button></view>
+    </view>
+    <view id="statsRow" class="card section stats-compact-table stats-card data-v-a09269df">
+      <view class="thead data-v-a09269df"><text class="th data-v-a09269df">剩余</text><text class="th data-v-a09269df">局数</text><text class="th ok data-v-a09269df">成功</text><text class="th fail data-v-a09269df">失败</text><text class="th data-v-a09269df">胜率</text><text class="th data-v-a09269df">上一局</text><text class="th data-v-a09269df">本局</text></view>
+      <view class="tbody data-v-a09269df"><text class="td data-v-a09269df">{{m}}</text><text class="td data-v-a09269df">{{n}}</text><text class="td ok data-v-a09269df">{{o}}</text><text class="td fail data-v-a09269df">{{p}}</text><text class="td data-v-a09269df">{{q}}%</text><text class="td data-v-a09269df">{{r}}</text>
+        <view class="td timer-cell data-v-a09269df" id="timerCell" bindtap="{{w}}">
+          <block wx:if="{{s}}"><text class="data-v-a09269df">{{t}}</text></block>
+          <block wx:else><button class="btn btn-secondary btn-reshuffle data-v-a09269df" catchtap="{{v}}">洗牌</button></block>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="game-middle data-v-a09269df" style="{{'height:' + X}}">
+    <view class="mode-panels data-v-a09269df">
+      <view wx:if="{{Q}}" class="pro-mode mode-panel data-v-a09269df" hidden="{{!Q}}">
+        <view id="cardGrid" class="card-grid data-v-a09269df" style="padding-top:0rpx">
+          <view wx:for="{{x}}" wx:for-item="card" wx:key="c" class="{{['playing-card', 'data-v-a09269df', card.d && 'used']}}" catchtouchstart="{{card.e}}" catchtouchmove="{{card.f}}" catchtouchend="{{card.g}}">
+            <playing-card wx:if="{{card.b}}" class="playing-card-visual data-v-a09269df" u-i="{{card.a}}" bind:__l="__l" u-p="{{card.b}}" />
+          </view>
+        </view>
+        <view id="opsRow1" class="{{['data-v-a09269df', 'ops-row-1', z]}}"><button wx:for="{{y}}" wx:for-item="op" wx:key="b" class="btn btn-operator data-v-a09269df" catchtouchstart="{{op.c}}" catchtouchmove="{{op.d}}" catchtouchend="{{op.e}}">{{op.a}}</button></view>
+        <view id="opsRow2" class="{{['data-v-a09269df', 'ops-row-2', D]}}">
+          <view class="ops-left data-v-a09269df"><button wx:for="{{A}}" wx:for-item="op" wx:key="b" class="btn btn-operator data-v-a09269df" catchtouchstart="{{op.c}}" catchtouchmove="{{op.d}}" catchtouchend="{{op.e}}">{{op.a}}</button></view><button class="btn btn-secondary mode-btn data-v-a09269df" bindtap="{{C}}">{{B}}</button>
+        </view>
+        <view wx:if="{{E}}" class="drag-ghost data-v-a09269df" style="{{G}}">{{F}}</view>
+        <view class="expr-card card section data-v-a09269df">
+          <view id="exprZone" class="{{['expr-zone', 'data-v-a09269df', N && 'expr-zone-active', O && 'empty']}}" style="{{'height:' + P}}">
+            <view wx:if="{{H}}" class="expr-override data-v-a09269df">{{I}}</view>
+            <view id="exprRow" class="row expr-row data-v-a09269df" style="{{'transform:' + M + ';' + ('transform-origin:' + 'left center')}}">
+              <block wx:for="{{J}}" wx:for-item="t" wx:key="l">
+                <view wx:if="{{t.a}}" class="{{['insert-placeholder', 'data-v-a09269df', t.b]}}"></view>
+                <view class="{{['tok', 'data-v-a09269df', t.g, t.h]}}" catchtouchstart="{{t.i}}" catchtouchmove="{{t.j}}" catchtouchend="{{t.k}}">
+                  <playing-card wx:if="{{t.c}}" class="tok-card-visual data-v-a09269df" u-i="{{t.d}}" bind:__l="__l" u-p="{{t.e}}" /><text wx:else class="tok-op-text data-v-a09269df">{{t.f}}</text>
+                </view>
+              </block>
+              <view wx:if="{{K}}" class="{{['insert-placeholder', 'data-v-a09269df', L]}}"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:elif="{{W}}" class="basic-mode mode-panel data-v-a09269df" hidden="{{!W}}">
+        <view class="basic-board data-v-a09269df">
+          <view class="basic-column data-v-a09269df">
+            <view wx:for="{{R}}" wx:for-item="i" wx:key="h" class="basic-card-wrapper data-v-a09269df">
+              <view class="{{['data-v-a09269df', 'basic-card', i.f]}}" bindtap="{{i.g}}">
+                <playing-card wx:if="{{i.a}}" class="basic-card-visual data-v-a09269df" u-i="{{i.b}}" bind:__l="__l" u-p="{{i.c}}" />
+                <view wx:elif="{{i.d}}" class="basic-card-value data-v-a09269df"><text class="basic-card-value-text data-v-a09269df">{{i.e}}</text></view>
+              </view>
+            </view>
+          </view>
+          <view class="basic-ops data-v-a09269df"><button wx:for="{{S}}" wx:for-item="op" wx:key="b" class="{{['btn', 'btn-operator', 'data-v-a09269df', op.c && 'active']}}" bindtap="{{op.d}}">{{op.a}}</button><button class="btn btn-secondary mode-btn basic-face-toggle data-v-a09269df" bindtap="{{U}}">{{T}}</button></view>
+          <view class="basic-column data-v-a09269df">
+            <view wx:for="{{V}}" wx:for-item="i" wx:key="h" class="basic-card-wrapper data-v-a09269df">
+              <view class="{{['data-v-a09269df', 'basic-card', i.f]}}" bindtap="{{i.g}}">
+                <playing-card wx:if="{{i.a}}" class="basic-card-visual data-v-a09269df" u-i="{{i.b}}" bind:__l="__l" u-p="{{i.c}}" />
+                <view wx:elif="{{i.d}}" class="basic-card-value data-v-a09269df"><text class="basic-card-value-text data-v-a09269df">{{i.e}}</text></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view id="gameBottomBox" class="game-footer bottom-fixed data-v-a09269df">
+    <view wx:if="{{Q}}" id="submitRow" class="footer-row data-v-a09269df">
+      <button hidden="{{!Y}}" class="btn btn-primary footer-primary-btn data-v-a09269df" bindtap="{{Z}}">提交答案</button>
+    </view>
+    <view wx:elif="{{W}}" hidden="{{!ad}}" class="basic-utility-grid data-v-a09269df"><button class="btn btn-secondary data-v-a09269df" disabled="{{aa}}" bindtap="{{ab}}">后退</button><button class="btn btn-secondary data-v-a09269df" bindtap="{{ac}}">重置</button>
+    </view>
+    <view id="failRow" class="footer-row data-v-a09269df">
+      <view wx:if="{{Q}}" class="pair-grid footer-pair data-v-a09269df" hidden="{{!ag}}"><button class="btn btn-secondary data-v-a09269df" bindtap="{{ae}}">提示</button><button class="btn btn-secondary data-v-a09269df" bindtap="{{af}}">下一题</button></view>
+      <view wx:elif="{{W}}" class="pair-grid footer-pair data-v-a09269df" hidden="{{!aj}}"><button class="btn btn-secondary data-v-a09269df" bindtap="{{ah}}">提示</button><button class="btn btn-secondary data-v-a09269df" bindtap="{{ai}}">下一题</button></view>
+    </view>
+  </view>
+  <view wx:if="{{ak}}" class="success-overlay data-v-a09269df">
+    <view class="success-burst data-v-a09269df">24!</view>
+  </view>
+  <view wx:if="{{al}}" class="success-overlay data-v-a09269df">
+    <view class="error-burst data-v-a09269df"><text class="err-title data-v-a09269df">计算错误</text><text wx:if="{{am}}" class="err-val data-v-a09269df">{{an}}</text></view>
+  </view>
+  <view wx:if="{{ao}}" class="timer-popover-layer data-v-a09269df" bindtap="{{as}}">
+    <view class="timer-popover data-v-a09269df" style="{{aq}}" catchtap="{{ar}}"><button class="timer-popover-item data-v-a09269df" bindtap="{{ap}}">重新发牌</button></view>
+  </view>
+  <view wx:if="{{at}}" class="{{['floating-hint-layer', 'data-v-a09269df', ax && 'interactive']}}" bindtap="{{ay}}">
+    <view class="floating-hint data-v-a09269df" catchtap="{{aw}}">{{av}}</view>
+  </view>
+  <custom-tab-bar class="data-v-a09269df" u-i="a09269df-4" bind:__l="__l"></custom-tab-bar>
+</view>

@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/index/index",
+    "pages/user/index",
+    "pages/stats/index"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "无敌24点程序·观测",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {}
+}

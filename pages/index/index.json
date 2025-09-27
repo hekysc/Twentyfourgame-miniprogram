@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "无敌24点程序·观测",
+  "usingComponents": {
+    "custom-tab-bar": "../../components/CustomTabBar",
+    "playing-card": "../../components/PlayingCard"
+  }
+}

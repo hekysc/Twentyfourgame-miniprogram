@@ -1,0 +1,1 @@
+<view class="spark data-v-c6000114" style="{{'height:' + b}}"><view wx:for="{{a}}" wx:for-item="v" wx:key="a" class="{{['seg', 'data-v-c6000114', v.b && 'ok']}}" style="{{'height:' + v.c}}"></view></view>
