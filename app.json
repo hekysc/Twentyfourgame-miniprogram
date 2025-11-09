@@ -3,7 +3,8 @@
     "pages/login/index",
     "pages/index/index",
     "pages/user/index",
-    "pages/stats/index"
+    "pages/stats/index",
+    "pages/settings/index"
   ],
   "window": {
     "navigationStyle": "custom",

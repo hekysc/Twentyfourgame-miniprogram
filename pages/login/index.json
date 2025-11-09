@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "登录",
   "enablePullDownRefresh": false,
-  "usingComponents": {}
+  "usingComponents": {
+    "app-nav-bar": "../../components/AppNavBar"
+  }
 }
