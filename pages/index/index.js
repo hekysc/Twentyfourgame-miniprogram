@@ -1,1 +1,1753 @@
-"use strict";const e=require("../../common/vendor.js"),t=require("../../utils/solver.js"),a=require("../../utils/store.js"),u=require("../../utils/useSafeArea.js"),l=require("../../utils/tab-cache.js"),n=require("../../utils/calc.js"),r=require("../../core/basic-mode.js"),i=require("../../core/game-engine.js"),o=require("../../utils/mistakes.js"),c=require("../../utils/hints.js"),s=require("../../utils/edge-exit.js"),v=require("../../utils/prefs.js"),d=require("../../utils/avatar.js"),f=require("../../utils/navigation.js");Math||(h+p+x)();const h=()=>"../../components/AppNavBar.js",p=()=>"../../components/CircleActionButton.js",x=()=>"../../components/PlayingCard.js",m={__name:"index",setup(h){const p=e.ref([{rank:1,suit:"S"},{rank:5,suit:"H"},{rank:5,suit:"D"},{rank:5,suit:"C"}]),x=e.ref(null),m=e.ref([0,0,0,0]),y=e.ref([]);let g="basic";try{const e=v.getLastMode();"pro"!==e&&"basic"!==e||(g=e)}catch(ua){}const k=e.ref(g);try{v.setLastMode(g)}catch(ua){}const b=e.ref([]),w=e.ref({first:null,operator:null}),M=e.ref([]),S=e.ref(""),T=e.ref(""),A=e.ref({totalHeight:0,buttonHeight:0}),R=e.computed((()=>{const e=A.value||{},t=Number(e.buttonHeight),a=Number(e.totalHeight);if(!Number.isFinite(t)||t<=0)return{};const u={"--basic-ops-button-height":`${t}px`};return Number.isFinite(a)&&a>0&&(u.height=`${a}px`),u})),C=(()=>{try{const e=v.getGameplayPrefs();return{rankMode:e.rankMode||"jqk-11-12-13",deckSource:e.deckSource||"regular",mixWeight:Number.isFinite(e.mixWeight)?e.mixWeight:50,haptics:!!e.haptics,sfx:!!e.sfx,reducedMotion:!!e.reducedMotion}}catch(ua){return{rankMode:"jqk-11-12-13",deckSource:"regular",mixWeight:50,haptics:!0,sfx:!0,reducedMotion:!1}}})(),H=e.ref({...C}),D=e.ref({...C}),I=e.ref("jqk-11-12-13"===H.value.rankMode),N=e.ref(!!H.value.haptics),j=e.ref(!!H.value.sfx),$=e.ref(!!H.value.reducedMotion),L=e.ref(!1),q=e.ref(!1),E=e.ref("pro"===g?80:70),F=e.ref(null),U=e.ref(!1),P=e.computed((()=>(F.value&&"string"==typeof F.value.name?F.value.name.trim():"")||"未登录")),W=e.computed((()=>F.value&&F.value.avatar?F.value.avatar:"")),B=e.computed((()=>function(e){if(!e)return"U";const t=String(e).trim();return t.length?t[0].toUpperCase():"U"}(P.value))),_=e.computed((()=>function(e){const t=String((null==e?void 0:e.id)||(null==e?void 0:e.name)||"");if(!t)return"#e2e8f0";let a=0;for(let l=0;l<t.length;l++)a=33*a+t.charCodeAt(l)>>>0;const u=["#e2e8f0","#fde68a","#bbf7d0","#bfdbfe","#fecaca","#f5d0fe","#c7d2fe"];return u[a%u.length]}(F.value))),O=e.ref([]),K=e.ref(H.value.deckSource||"regular"),z=e.ref(H.value.mixWeight??50),Q=e.ref(new Set),X=e.ref(0),Y=e.ref("regular"),G=e.ref(""),J=e.ref(0),V=e.ref(0),Z=e.ref(0);e.ref(!1);const ee=e.ref({visible:!1,left:0,top:0}),te=e.computed((()=>({left:`${ee.value.left}px`,top:`${ee.value.top}px`}))),ae=e.ref(!1),ue=e.ref(!1),le=e.ref(""),ne=e.ref(""),re=e.ref(Date.now()),ie=e.ref(Date.now()),oe=e.ref(!1),ce=e.ref(0),se=e.ref(null),ve=e.ref(!1),de=e.ref(null),fe=e.ref(!1),{safeTop:he,safeBottom:pe,windowHeight:xe,refreshSafeArea:me}=u.useSafeArea(),ye=e.computed((()=>({paddingTop:`${Math.max(0,he.value||0)}px`}))),ge=e.ref(u.rpxToPx(520)),ke=e.ref(u.rpxToPx(320)),be=e.ref(0);let we=null;const{hintState:Me,showHint:Se,hideHint:Te}=c.useFloatingHint(),Ae={SAME_INDEX:"请选择另一张牌",INACTIVE_SLOT:"请选择有效的数字",DIVIDE_BY_ZERO:"除数不能为 0",INVALID_OPERATION:"无法进行该运算，请重试"};const Re=s.useEdgeExit({showHint:Se,onExit:()=>Pt()});let Ce=0;e.onBackPress((()=>{const t=Date.now();if(t-Ce<2e3)Pt();else{Ce=t;try{Se("再按一次返回退出应用",{duration:2e3,interactive:!1})}catch(ua){e.index.showToast({title:"再按一次退出应用",icon:"none"})}}return!0}));const He=n.formatMs,De=n.formatMsShort;function Ie(e){return"jqk-1"===e?"jqk-1":"jqk-11-12-13"}function Ne(e){return"mistakes"===e||"mix"===e?e:"mistake"===e?"mistakes":"regular"}function je(e){return Number.isFinite(e)?Math.min(100,Math.max(0,Math.round(e))):50}function $e(e){const t=e&&"object"==typeof e?e:{};return{rankMode:Ie(t.rankMode),deckSource:Ne(t.deckSource),mixWeight:je(t.mixWeight),haptics:"boolean"!=typeof t.haptics||t.haptics,sfx:"boolean"!=typeof t.sfx||t.sfx,reducedMotion:"boolean"==typeof t.reducedMotion&&t.reducedMotion}}function Le(){try{const t=v.getGameplayPrefs();if(t&&t.rankMigrationNotice){try{e.index.showToast({title:"已迁移到新规则：JQK 仅支持 1 或 11/12/13",icon:"none",duration:2400})}catch(ua){}try{v.consumeRankMigrationNotice()}catch(ua){}t.rankMigrationNotice=!1}const a=$e(t);D.value={...a};try{const e=v.getLastMode&&v.getLastMode();e&&vt(e)}catch(ua){}}catch(ua){}}function qe(){Ee(),we||(we=setTimeout((()=>{we=null,function(){try{e.nextTick$1((()=>{var t,a;const l=e.index.createSelectorQuery();l&&Ve&&l.in(Ve),null==(t=null==l?void 0:l.select("#gameTopBox"))||t.boundingClientRect((e=>{e&&Number.isFinite(e.height)&&(ge.value=Math.max(e.height,u.rpxToPx(520)))})),null==(a=null==l?void 0:l.select("#gameBottomBox"))||a.boundingClientRect((e=>{e&&Number.isFinite(e.height)&&(ke.value=Math.max(e.height,u.rpxToPx(320)))})),null==l||l.exec((()=>{Ee(),ot()}))}))}catch(ua){Ee()}}()}),16))}function Ee(){const e="undefined"!=typeof window&&Number.isFinite(window.innerHeight)?window.innerHeight:0,t=xe.value||e;if(!t)return void(be.value=Math.max(0,be.value||0));const a=Math.max(ge.value||0,u.rpxToPx(520)),l=Math.max(ke.value||0,u.rpxToPx(320)),n=t-Math.max(0,he.value||0)-a-l-Math.max(0,pe.value||0);be.value=Math.max(0,n)}function Fe(){U.value=!0}function Ue(){try{const t={deck:O.value||[],cards:p.value||[],tokens:(y.value||[]).map((e=>({type:e.type,value:e.value,rank:e.rank,suit:e.suit}))),usedByCard:m.value||[],faceUseHigh:!!I.value,rankMode:H.value.rankMode,handRecorded:!!L.value,timeoutRecorded:!!q.value,handStartTs:re.value||0,hintWasUsed:!!oe.value,attemptCount:ce.value||0,handsPlayed:J.value||0,successCount:V.value||0,failCount:Z.value||0,handFailedOnce:!!fe.value,solution:x.value||null,deckSource:K.value||"regular",mixWeight:z.value,haptics:N.value,sfx:j.value,reducedMotion:$.value,mistakeRunUsed:Array.from(Q.value||[]),mistakeRunStamp:X.value||0,currentHandSource:Y.value||"regular",currentMistakeKey:G.value||"",mode:k.value||"basic"};e.index.setStorageSync("tf24_game_session_v1",JSON.stringify(t))}catch(ua){}}function Pe(){try{const a=e.index.getStorageSync("tf24_game_session_v1");if(!a)return!1;const u="string"==typeof a?JSON.parse(a):a;if(!u||!Array.isArray(u.deck)||!Array.isArray(u.cards))return!1;if(4===(u.cards||[]).length){const a="pro"===u.mode?"pro":"basic";let l=null;try{l=v.getLastMode?v.getLastMode():null}catch(ua){l=null}if(l&&l!==a)return vt(l),Rt(),!1;O.value=u.deck,p.value=u.cards,kt(),y.value=Array.isArray(u.tokens)?u.tokens:[],m.value=Array.isArray(u.usedByCard)?u.usedByCard:[0,0,0,0];const r=$e({rankMode:Ie(u.rankMode||(u.faceUseHigh?"jqk-11-12-13":"jqk-1")),deckSource:u.deckSource,mixWeight:u.mixWeight,haptics:u.haptics,sfx:u.sfx,reducedMotion:u.reducedMotion});if(H.value={...r},D.value={...D.value,...r},I.value="jqk-11-12-13"===r.rankMode,K.value=r.deckSource,z.value=r.mixWeight,N.value=r.haptics,j.value=r.sfx,$.value=r.reducedMotion,L.value=!!u.handRecorded,q.value=!!u.timeoutRecorded,re.value=u.handStartTs||Date.now(),oe.value=!!u.hintWasUsed,ce.value=u.attemptCount||0,J.value=u.handsPlayed||0,V.value=u.successCount||0,Z.value=u.failCount||0,fe.value=!!u.handFailedOnce,x.value=u.solution||null,Q.value=new Set(Array.isArray(u.mistakeRunUsed)?u.mistakeRunUsed:[]),X.value=u.mistakeRunStamp||0,Y.value="mistake"===u.currentHandSource?"mistake":"regular",G.value="string"==typeof u.currentMistakeKey?u.currentMistakeKey:"",k.value=a,Rt(),!x.value)try{const e=(p.value||[]).map((e=>n.mapCardRank(e.rank,I.value)));x.value=4===e.length?t.solve24(e):null}catch(ua){x.value=null}return e.nextTick$1((()=>{aa(),it(),Zt()})),!0}return!1}catch(ua){return!1}}const We=e.computed((()=>{if("mistakes"===K.value){const e=et.value;if(!e)return 0;const t=o.getActivePool(e)||[];if(!Array.isArray(t)||0===t.length)return 0;const a=Q.value instanceof Set?Q.value:new Set;let u=0;for(const l of t)l&&l.key&&(a.has(l.key)||(u+=1));return 4*u}return Array.isArray(O.value)?O.value.length:0})),Be=e.computed((()=>{const e=V.value+Z.value;return e?Math.round(100*V.value/e):0})),_e=e.computed((()=>{const e=re.value||Date.now(),t=(ie.value||Date.now())-e;return t>0?t:0}));let Oe=null;function Ke(){if(!Oe)try{Oe=setInterval((()=>{const e=Date.now();ie.value=e;const t=re.value||e;!q.value&&e-t>=12e4&&function(){if(q.value||L.value)return;q.value=!0,L.value=!0,fe.value=!0;const e=Date.now()-(re.value||Date.now()),t=e>0?e:12e4,u=n.computeExprStats(y.value);J.value+=1,Z.value+=1;try{a.pushRound({success:!1,timeMs:t,hintUsed:!!oe.value,retries:ce.value||0,ops:u.ops,exprLen:u.exprLen,maxDepth:u.maxDepth,faceUseHigh:!!I.value,hand:{cards:(p.value||[]).map((e=>({rank:e.rank,suit:e.suit})))},expr:at.value}),Et()}catch(ua){}if(et.value)try{o.recordRoundResult({userId:et.value,nums:tt.value,success:!1})}catch(ua){}try{Se("超过120秒，已记失败，可继续作答",2e3)}catch(ua){}}()}),100)}catch(ua){Oe=null}}function ze(){if(Oe){try{clearInterval(Oe)}catch(ua){}Oe=null}}const Qe=e.ref({active:!1,token:null,x:0,y:0,startX:0,startY:0,moved:!1}),Xe=e.ref({left:0,top:0,right:0,bottom:0}),Ye=e.ref([]),Ge=e.ref(-1),Je=e.ref(-1),{proxy:Ve}=e.getCurrentInstance(),Ze=e.ref(!1),et=e.computed((()=>F.value&&F.value.id?F.value.id:"")),tt=e.computed((()=>(p.value||[]).map((e=>e.rank)).sort(((e,t)=>e-t))));e.watch([he,xe,pe],(()=>{qe()})),e.watch(et,((t,a)=>{if(t===a)return;const u="mistakes"===K.value;jt(u?Date.now():0),!t&&u?(Lt("regular",{scheduleNext:!1}),jt(0),e.nextTick$1((()=>{Dt()}))):u&&t&&e.nextTick$1((()=>{Dt()}))}));const at=e.computed((()=>n.tokensToExpression(y.value,I.value))),ut=e.computed((()=>`left:${Qe.value.x}px; top:${Qe.value.y}px;`)),lt=e.ref(1),nt=e.ref("normal"),rt=e.computed((()=>"tight"===nt.value?"ops-tight":"compact"===nt.value?"ops-compact":""));function it(){E.value="pro"===k.value?80:70;try{const t=e.index.getSystemInfoSync&&e.index.getSystemInfoSync()||{},a=t.windowHeight||t.screenHeight||0;if("pro"!==k.value)return void(nt.value="normal");nt.value=a&&a<640?"tight":a&&a<740?"compact":"normal"}catch(ua){nt.value="normal"}}function ot(){"basic"===k.value?e.nextTick$1((()=>{var t;try{const a=e.index.createSelectorQuery();a&&Ve&&a.in(Ve),null==(t=null==a?void 0:a.select(".basic-card"))||t.boundingClientRect(),null==a||a.exec((e=>{const t=Array.isArray(e)?e[0]:null,a=t&&Number.isFinite(null==t?void 0:t.height)?t.height:0;if(!a)return;const l=2*a+Math.max(0,Number(u.rpxToPx?u.rpxToPx(18):0)),n=(l-3*Math.max(0,Number(u.rpxToPx?u.rpxToPx(12):0)))/4;!Number.isFinite(n)||n<=0||(A.value={totalHeight:l,buttonHeight:n})}))}catch(ua){}})):A.value={totalHeight:0,buttonHeight:0}}it();const ct=e.computed((()=>{const e=Qe.value.token;return e?"num"===e.type?n.labelForRank(e.rank||+e.value):"tok"===e.type?/^(10|11|12|13|[1-9])$/.test(e.value)?n.labelForRank(+e.value):e.value:e.value||"":""})),st=e.computed((()=>{const e=Qe.value.token;return Qe.value.active&&e?"num"===e.type?"num":"op"===e.type?"op":"tok"===e.type&&/^(10|11|12|13|[1-9])$/.test(e.value)?"num":"op":"op"}));function vt(e){const t="pro"===e?"pro":"basic";k.value!==t&&(k.value=t),it(),ot()}function dt(e){vt(e)}function ft(){try{const e=v.getLastMode?v.getLastMode():null;e&&vt(e)}catch(ua){}}const ht=e.computed((()=>"pro"===k.value?0===y.value.length:0===M.value.length)),pt=e.computed((()=>"pro"===k.value&&0===y.value.length)),xt=e.computed((()=>"pro"!==k.value||0===y.value.length));function mt(){le.value&&(le.value="")}function yt(){Se("表达式不合法，请重试",1600)}function gt(e){const t=b.value[e];return{hidden:!t||!t.alive,selected:w.value.first===e,result:!(!t||!t.alive||"value"!==t.source)}}function kt(){const e=r.createBasicState(p.value||[],I.value);b.value=e.slots,w.value={first:null,operator:null},M.value=[],S.value=e.expression,T.value=e.displayExpression}function bt(e){if("basic"!==k.value||ve.value)return;const t=b.value[e];if(!t||!t.alive)return;const a=w.value;if(a.operator&&null!==a.first)return a.first===e?void(w.value={first:null,operator:null}):void function(e,t,a){const u=r.combineBasicSlots({slots:b.value,history:M.value,expression:S.value,displayExpression:T.value},e,t,a);if(!u.ok)return w.value={first:null,operator:null},void(u.err&&(l=u.err,Se(Ae[l]||"操作无效，请重试",{interactive:!0})));var l;const n=u.data;b.value=n.slots,M.value=n.history,S.value=n.expression,T.value=n.displayExpression;let i=null;for(let r=0;r<n.slots.length;r++)if(n.slots[r]&&n.slots[r].alive&&"value"===n.slots[r].source){i=r;break}w.value={first:i,operator:null},ne.value="",1===n.aliveCount&&Ft({ok:!!n.isSolved,expression:n.exprForRecord,valueFraction:n.result,stats:n.stats,origin:"basic",allowRetry:!n.isSolved});try{Ue()}catch(ua){}}(a.first,e,a.operator);a.first!==e?w.value={first:e,operator:null}:w.value={first:null,operator:null}}function wt(){if("pro"===k.value){if(!y.value.length)return;Yt(y.value.length-1);try{Ue()}catch(ua){}}else!function(){const e=r.undoBasicHistory(M.value);if(!e.ok)return;const t=e.data;M.value=t.history,b.value=t.slots,S.value=t.expression,T.value=t.displayExpression,w.value={first:null,operator:null},ne.value="";try{Ue()}catch(ua){}}()}function Mt(){if("pro"===k.value){if(!y.value.length&&m.value.every((e=>!e)))return;y.value=[],m.value=[0,0,0,0],le.value="",ne.value="",e.nextTick$1((()=>{it(),Zt()}));try{Ue()}catch(ua){}}else!function(){kt(),ne.value="";try{Ue()}catch(ua){}}()}function St(){xt.value||function(){const e=m.value.reduce(((e,t)=>e+(t?1:0)),0);if(ne.value="",4!==e||!n.isExpressionComplete(y.value))return void yt();const a=at.value;if(!a)return void yt();ce.value+=1;const u=t.evaluateExprToFraction(a);Ft({ok:u&&u.equalsInt&&u.equalsInt(24),expression:a,valueFraction:u,stats:n.computeExprStats(y.value),origin:"pro"})}()}function Tt(){!function(){if(oe.value=!0,!x.value)try{const e=(p.value||[]).map((e=>n.mapCardRank(e.rank,I.value)));x.value=4===e.length?t.solve24(e):null}catch(ua){x.value=null}if(!L.value){L.value=!0,J.value+=1,Z.value+=1;try{const e=n.computeExprStats(y.value);a.pushRound({success:!1,timeMs:Date.now()-(re.value||Date.now()),hintUsed:!0,retries:ce.value||0,ops:e.ops,exprLen:e.exprLen,maxDepth:e.maxDepth,faceUseHigh:!!I.value,hand:{cards:(p.value||[]).map((e=>({rank:e.rank,suit:e.suit})))},expr:at.value}),Et()}catch(ua){}if(et.value)try{o.recordRoundResult({userId:et.value,nums:tt.value,success:!1})}catch(ua){}}if("basic"===k.value){fe.value=!0;const e=x.value?"答案："+x.value:"暂无提示";T.value=e,Se(e,2e3)}else le.value=x.value?"答案："+x.value:"暂无提示";try{Ue()}catch(ua){}}()}function At(){O.value=i.newDeck()}function Rt(){ee.value={visible:!1,left:0,top:0}}function Ct(){ee.value.visible?Rt():function(){try{e.index.createSelectorQuery().in(Ve).select("#timerCell").boundingClientRect().exec((t=>{const[a]=t||[];if(!a)return void(ee.value={visible:!0,left:0,top:0});const u=e.index.getSystemInfoSync&&e.index.getSystemInfoSync()||{};let l=(a.bottom||(a.top||0)+(a.height||0))+8;const n=u&&Number.isFinite(u.windowHeight)?u.windowHeight-96:0;n&&l>n&&(l=n);const r=a.left+a.width/2;ee.value={visible:!0,left:r,top:l}}))}catch(ua){ee.value={visible:!0,left:0,top:0}}}()}function Ht(){Rt(),ne.value="",le.value="",Dt()}async function Dt(){!function(){const e=D.value||C;H.value={...e},I.value="jqk-11-12-13"===H.value.rankMode,K.value=H.value.deckSource,z.value=H.value.mixWeight,N.value=H.value.haptics,j.value=H.value.sfx,$.value=H.value.reducedMotion,it()}(),Rt();const t=await async function(){if("mistakes"===K.value){const e=await Nt();return e||await It()}if("mix"===K.value){if(100*Math.random()<je(z.value)){const e=await Nt({silent:!0});if(e)return e}const e=await It();return e||await Nt({silent:!0})}return await It()}();if(t){ve.value=!1,de.value=null,fe.value=!1,L.value=!1,q.value=!1,ce.value=0,oe.value=!1,ne.value="",le.value="",Array.isArray(t.deck)&&(O.value=t.deck),p.value=Array.isArray(t.cards)?t.cards:[],Y.value="mistake"===t.source?"mistake":"regular",G.value="mistake"===t.source&&t.mistakeKey||"",x.value=t.solution||null,y.value=[],m.value=[0,0,0,0],L.value=!1,re.value=Date.now(),oe.value=!1,ce.value=0,e.nextTick$1((()=>{it(),ot()}));try{Ue()}catch(ua){}}}async function It(){if((!Array.isArray(O.value)||O.value.length<4)&&At(),!Array.isArray(O.value)||O.value.length<4)return qt(),null;const e=i.drawSolvableHand(O.value,I.value,t.solve24);return e.ok?{source:"normal",cards:e.data.cards,deck:e.data.deck,solution:e.data.solution}:(qt(),null)}async function Nt(a={}){const u=!!a.silent,l=et.value;if(!l)return u||(Se("请先选择用户",1600),Lt("regular",{scheduleNext:!1})),null;const r=o.getActivePool(l)||[];if(!Array.isArray(r)||0===r.length)return u||await new Promise((t=>{const a=()=>{Lt("regular"),t(null)};try{e.index.showModal({title:"提示",content:"无错题，切换到整副牌。",confirmText:"OK",showCancel:!1,success:()=>a(),fail:()=>a()})}catch(ua){a()}})),null;const i=Q.value instanceof Set?Q.value:new Set,c=r.filter((e=>e&&e.key&&!i.has(e.key)));if(!c.length)return u||await new Promise((t=>{const a=()=>{$t(),t(null)};try{e.index.showActionSheet({title:"本轮错题已出完",itemList:["重新出题","切换整副","去统计"],success:e=>{const a="number"==typeof(null==e?void 0:e.tapIndex)?e.tapIndex:-1;0===a?$t():1===a?Lt("regular"):2===a?Bt():$t(),t(null)},fail:()=>a()})}catch(ua){a()}})),null;const s=c[Math.floor(Math.random()*c.length)],v=function(e){const t=["S","H","D","C"];return(Array.isArray(e)?e:[]).map(((e,a)=>({rank:Number.isFinite(+e)?Math.min(13,Math.max(1,Math.floor(+e))):1,suit:t[a%t.length]})))}(Array.isArray(null==s?void 0:s.nums)?s.nums:[]);let d=null;try{const e=v.map((e=>n.mapCardRank(e.rank,I.value)));d=4===e.length?t.solve24(e):null}catch(ua){d=null}const f=new Set(i);f.add(s.key),Q.value=f;try{Ue()}catch(ua){}return{source:"mistake",cards:v,deck:O.value,solution:d,mistakeKey:s.key}}function jt(e=0){Q.value=new Set,X.value=e,G.value=""}function $t(){jt(Date.now());try{Ue()}catch(ua){}e.nextTick$1((()=>{"mistakes"===K.value&&Dt()}))}function Lt(t,a={}){const u=Ne(t);if(K.value!==u)if("mistakes"!==u||et.value){if(K.value=u,D.value={...D.value,deckSource:u},H.value={...H.value,deckSource:u},"mix"!==u&&(D.value.mixWeight=z.value),!1!==a.persist){try{v.setGameplayPrefs({deckSource:u})}catch(ua){}Le()}"regular"===u&&(!Array.isArray(O.value)||O.value.length<4)&&At();try{Ue()}catch(ua){}!1!==a.scheduleNext&&e.nextTick$1((()=>{Dt()}))}else Se("请先选择用户",1600)}function qt(){try{e.index.showModal({title:"牌库用尽",content:"余牌无解或整副用完，是否重新洗牌？",confirmText:"重洗",cancelText:"进入统计",success:t=>{if(t.confirm)At(),J.value=0,V.value=0,Z.value=0,e.nextTick$1((()=>Dt()));else try{e.index.reLaunch({url:"/pages/stats/index"})}catch(a){try{e.index.navigateTo({url:"/pages/stats/index"})}catch(ua){}}}})}catch(ua){At(),J.value=0,V.value=0,Z.value=0,e.nextTick$1((()=>Dt()))}}function Et(){try{const e=a.getCurrentUser&&a.getCurrentUser();if(!e||!e.id)return void(se.value=null);const t=a.readStatsExtended&&a.readStatsExtended(e.id);if(t&&(null==e?void 0:e.id))try{l.mergeCachedStatsExt({[e.id]:t})}catch(ua){}const u=(t&&Array.isArray(t.rounds)?t.rounds.slice().reverse():[]).find((e=>e&&e.success&&Number.isFinite(e.timeMs)));se.value=u?u.timeMs:null}catch(ua){se.value=null}}function Ft({ok:e,expression:u,valueFraction:r,stats:i,origin:c,allowRetry:s=!1}){const v=u||"",d=i||n.statsFromExpressionString(v),f=r||(v?t.evaluateExprToFraction(v):null),h=Date.now()-(re.value||Date.now()),x="pro"===c?Math.max(0,(ce.value||1)-1):0,m="pro"===c&&ce.value||0,y=s&&!e,g=e=>{if(et.value)try{o.recordRoundResult({userId:et.value,nums:tt.value,success:e})}catch(ua){}try{a.pushRound({success:e,timeMs:h,hintUsed:!!oe.value,retries:e?x:m,ops:d.ops,exprLen:d.exprLen,maxDepth:d.maxDepth,faceUseHigh:!!I.value,hand:{cards:(p.value||[]).map((e=>({rank:e.rank,suit:e.suit})))},expr:v});try{l.scheduleTabWarmup({delay:200})}catch(ua){}e&&Et()}catch(ua){}};if(e){const e=q.value;if(ne.value="",e){if(ve.value&&"success"===de.value){try{Ue()}catch(ua){}return}ve.value=!0,de.value="success";try{ae.value=!0,setTimeout((()=>{ae.value=!1,Dt()}),500)}catch(ua){Dt()}try{Ue()}catch(ua){}return}if("basic"===c&&fe.value){try{ae.value=!0,setTimeout((()=>{ae.value=!1}),500)}catch(ua){}try{Ue()}catch(ua){}return}if(ve.value){if("success"===de.value){try{Ue()}catch(ua){}return}try{ae.value=!0,setTimeout((()=>{ae.value=!1,Dt()}),500)}catch(ua){Dt()}try{Ue()}catch(ua){}return}ve.value=!0,de.value="success",L.value=!0,J.value+=1,V.value+=1,g(!0);try{ae.value=!0,setTimeout((()=>{ae.value=!1,Dt()}),500)}catch(ua){Dt()}try{Ue()}catch(ua){}return}const k=()=>{try{f&&"function"==typeof f.toString?ne.value="结果："+f.toString():ne.value=""}catch(ua){ne.value=""}};if(y){k(),fe.value||(fe.value=!0,de.value="fail",L.value=!0,J.value+=1,Z.value+=1,g(!1));try{ue.value=!0,setTimeout((()=>{ue.value=!1}),500)}catch(ua){}try{Ue()}catch(ua){}}else{k(),ve.value||(ve.value=!0,de.value="fail",L.value=!0,J.value+=1,Z.value+=1,g(!1));try{ue.value=!0,setTimeout((()=>{ue.value=!1}),500)}catch(ua){}try{Ue()}catch(ua){}}}function Ut(){if(!L.value){L.value=!0,J.value+=1,Z.value+=1;try{const e=n.computeExprStats(y.value);a.pushRound({success:!1,timeMs:Date.now()-(re.value||Date.now()),hintUsed:!!oe.value,retries:ce.value||0,ops:e.ops,exprLen:e.exprLen,maxDepth:e.maxDepth,faceUseHigh:!!I.value,hand:{cards:(p.value||[]).map((e=>({rank:e.rank,suit:e.suit})))},expr:at.value}),Et()}catch(ua){}if(et.value)try{o.recordRoundResult({userId:et.value,nums:tt.value,success:!1})}catch(ua){}}Dt()}function Pt(){L.value||Se("本局进度将丢失",1200),f.exitApp({fallback:()=>{try{if("function"==typeof e.index.switchTab)return void e.index.switchTab({url:"/pages/stats/index"})}catch(ua){}try{if("function"==typeof e.index.reLaunch)return void e.index.reLaunch({url:"/pages/stats/index"})}catch(ua){}}})}function Wt(){try{e.index.navigateTo({url:"/pages/login/index"})}catch(t){try{e.index.reLaunch({url:"/pages/login/index"})}catch(ua){}}}function Bt(){try{e.index.reLaunch({url:"/pages/stats/index"})}catch(t){try{e.index.navigateTo({url:"/pages/stats/index"})}catch(ua){}}}function _t(){try{e.index.reLaunch({url:"/pages/user/index"})}catch(t){try{e.index.navigateTo({url:"/pages/user/index"})}catch(ua){}}}function Ot(){try{e.index.navigateTo({url:"/pages/settings/index"})}catch(t){try{e.index.reLaunch({url:"/pages/settings/index"})}catch(ua){}}}function Kt(e,t){Qe.value.active=!0,Qe.value.token=e;const a=Vt(t);Qe.value.x=a.x,Qe.value.y=a.y,Qe.value.startX=a.x,Qe.value.startY=a.y,Qe.value.moved=!1,Gt()}function zt(e){if(!Qe.value.active)return;const t=Vt(e);Qe.value.x=t.x,Qe.value.y=t.y;const a=Qe.value.x-Qe.value.startX,u=Qe.value.y-Qe.value.startY;!Qe.value.moved&&a*a+u*u>16&&(Qe.value.moved=!0);const l=Qe.value.token;if(l&&"tok"===l.type){const e=Qe.value.x,t=Qe.value.y;if(Jt(Xe.value,e,t)){const a=ea(e,t);a!==l.index&&a!==l.index+1&&(ta(l.index,a),l.index=a>l.index?a-1:a,Gt()),Ge.value=a}else Ge.value=-1}else{const e=Qe.value.x,t=Qe.value.y,a=Jt(Xe.value,e,t);Ge.value=a?ea(e,t):-1}}function Qt(){if(!Qe.value.active)return;const e=Qe.value.x,t=Qe.value.y,a=Qe.value.token,u=Jt(Xe.value,e,t);if(a&&!Qe.value.moved)return"tok"===a.type?Yt(a.index):"num"!==a.type&&"op"!==a.type||(!function(e){Xt(e,y.value.length)}(a),Je.value=Math.max(0,y.value.length-1),setTimeout((()=>{Je.value=-1}),220)),Qe.value.active=!1,Qe.value.token=null,void(Ge.value=-1);if(a&&"tok"===a.type)if(u){const u=ea(e,t);ta(a.index,u),Je.value=Math.max(0,Math.min(u,y.value.length-1)),setTimeout((()=>{Je.value=-1}),220)}else Yt(a.index);else if(u&&a){const u=ea(e,t);Xt(a,u),Je.value=Math.max(0,Math.min(u,y.value.length-1)),setTimeout((()=>{Je.value=-1}),220)}Qe.value.active=!1,Qe.value.token=null,Ge.value=-1}function Xt(e,t){mt();const a=Math.max(0,Math.min(t,y.value.length));if("num"===e.type){const t=e.cardIndex;if(null==t)return;if((m.value[t]||0)>=1)return;const u=y.value.slice();u.splice(a,0,{type:"num",value:e.value,rank:e.rank,suit:e.suit,cardIndex:t}),y.value=u;const l=m.value.slice();l[t]=1,m.value=l}else if("op"===e.type){const t=y.value.slice();t.splice(a,0,{type:"op",value:e.value}),y.value=t}}function Yt(e){if(mt(),e<0||e>=y.value.length)return;const t=y.value[e];if(t&&"num"===t.type&&null!=t.cardIndex){const e=m.value.slice();e[t.cardIndex]=0,m.value=e}y.value=y.value.slice(0,e).concat(y.value.slice(e+1))}function Gt(){e.index.createSelectorQuery().in(Ve).select("#exprZone").boundingClientRect().selectAll(".tok").boundingClientRect().exec((e=>{const[t,a]=e||[];t&&(Xe.value={left:t.left,top:t.top,right:t.right,bottom:t.bottom}),Ye.value=a||[]}))}function Jt(e,t,a){return t>=e.left&&t<=e.right&&a>=e.top&&a<=e.bottom}function Vt(e){const t=e&&e.touches&&e.touches[0]||e&&e.changedTouches&&e.changedTouches[0]||e&&e.detail||{x:0,y:0};return{x:t.clientX??t.x??0,y:t.clientY??t.y??0}}function Zt(){lt.value=1,e.nextTick$1((()=>{e.index.createSelectorQuery().in(Ve).select("#exprZone").boundingClientRect().select("#exprRow").boundingClientRect().exec((e=>{const[t,a]=e||[];if(!t||!a)return;const u=t.width-24,l=a.width||0;if(u>0&&l>0){const e=Math.min(1,u/l);lt.value=isFinite(e)&&e>0?e:1}else lt.value=1}))}))}function ea(e,t){const a=Ye.value||[];if(!a.length)return y.value.length;let u=0,l=1/0;for(let r=0;r<a.length;r++){const n=a[r],i=n.left+n.width/2-e,o=n.top+n.height/2-t,c=i*i+o*o;c<l&&(l=c,u=r)}const n=a[u];return e<n.left+n.width/2?u:u+1}function ta(e,t){if(mt(),e===t)return;const a=y.value.slice(),u=a.splice(e,1)[0],l=Math.max(0,Math.min(t,a.length));a.splice(l,0,u),y.value=a}function aa(){try{(e.index.getSystemInfoSync&&e.index.getSystemInfoSync()||{}).windowHeight||"undefined"!=typeof window&&window.innerHeight}catch(t){}}return e.onMounted((()=>{Le();try{if("function"==typeof e.index.$on){try{e.index.$off("tf24:mode-changed",dt)}catch(ua){}e.index.$on("tf24:mode-changed",dt)}}catch(ua){}a.ensureInit();try{e.index.hideTabBar&&e.index.hideTabBar()}catch(ua){}try{const t=a.getUsers&&a.getUsers();if(0==(t&&Array.isArray(t.list)?t.list:[]).length){try{e.index.showModal({title:"暂无用户",content:"请先新建用户后再开始程序。",confirmText:"去新建",showCancel:!1,success:()=>{try{e.index.reLaunch({url:"/pages/login/index"})}catch(t){try{e.index.navigateTo({url:"/pages/login/index"})}catch(ua){}}}})}catch(ua){try{e.index.reLaunch({url:"/pages/login/index"})}catch(u){try{e.index.navigateTo({url:"/pages/login/index"})}catch(l){}}}return}}catch(ua){}F.value=a.getCurrentUser()||null;const t=Pe();ft(),t||(At(),Dt()),setTimeout((()=>{Ze.value=!0}),0),e.nextTick$1((()=>{aa(),it(),Zt(),ot()})),e.index.onWindowResize&&e.index.onWindowResize((()=>{aa(),it(),Zt(),ot()})),Et(),Ke(),qe(),d.consumeAvatarRestoreNotice()&&Se("头像文件丢失，已为你恢复为默认头像",2e3)})),e.onShow((()=>{Le(),F.value=a.getCurrentUser()||null,Pe(),ft(),Ke();try{me()}catch(ua){}qe(),ot();try{l.scheduleTabWarmup({delay:180})}catch(ua){}d.consumeAvatarRestoreNotice()&&Se("头像文件丢失，已为你恢复为默认头像",2e3)})),e.onHide((()=>{Ue(),ze(),Rt()})),e.onUnmounted((()=>{try{"function"==typeof e.index.$off&&e.index.$off("tf24:mode-changed",dt)}catch(ua){}if(ze(),we){try{clearTimeout(we)}catch(ua){}we=null}})),e.watch(F,(()=>{U.value=!1})),e.watch(k,(t=>{const a="pro"===t?"pro":"basic";try{v.setLastMode(a)}catch(ua){}it(),"basic"===a?(kt(),w.value={first:null,operator:null},e.nextTick$1((()=>ot()))):(y.value=[],m.value=[0,0,0,0],le.value="",ne.value="",e.nextTick$1((()=>{it(),Zt()})),A.value={totalHeight:0,buttonHeight:0}),Rt(),qe()})),e.watch(p,(()=>{kt(),"basic"===k.value&&e.nextTick$1((()=>ot()))})),e.watch(I,(()=>{kt(),"basic"===k.value&&e.nextTick$1((()=>ot()))})),e.watch(y,(()=>Zt())),(t,a)=>e.e({a:e.p({showBack:!1,"with-safe-top":!1}),b:W.value&&!U.value},W.value&&!U.value?{c:W.value,d:e.o(Fe)}:{e:e.t(B.value),f:_.value},{g:e.t(P.value),h:e.o(Wt),i:e.o(_t),j:e.p({icon:"account_circle",label:"用户"}),k:e.o(Bt),l:e.p({icon:"insights",label:"统计"}),m:e.o(Ot),n:e.p({icon:"settings",label:"设置"}),o:e.t(We.value),p:e.t(J.value),q:e.t(V.value),r:e.t(Z.value),s:e.t(Be.value),t:e.t(null!=se.value?e.unref(He)(se.value):"-"),v:_e.value<12e4},_e.value<12e4?{w:e.t(e.unref(De)(_e.value))}:{},{x:e.o(Ct),y:e.f(p.value,((t,a,u)=>({a:"7066366f-4-"+u,b:e.p({card:t}),c:a,d:(m.value[a]||0)>0?1:"",e:e.o((e=>Kt({type:"num",value:String(t.rank),rank:t.rank,suit:t.suit,cardIndex:a},e)),a),f:e.o((e=>zt(e)),a),g:e.o((e=>Qt()),a)}))),z:e.f(["+","-","×","÷"],((t,a,u)=>({a:e.t(t),b:t,c:e.o((e=>Kt({type:"op",value:t},e)),t),d:e.o((e=>zt(e)),t),e:e.o((e=>Qt()),t)}))),A:e.n(rt.value),B:e.f(["(",")"],((t,a,u)=>({a:e.t(t),b:t,c:e.o((e=>Kt({type:"op",value:t},e)),t),d:e.o((e=>zt(e)),t),e:e.o((e=>Qt()),t)}))),C:"pro"===k.value},"pro"===k.value?{D:xt.value?1:"",E:xt.value,F:e.o(St)}:{},{G:e.n(rt.value),H:Qe.value.active},Qe.value.active?{I:e.t(ct.value),J:e.s(ut.value)}:{},{K:le.value},le.value?{L:e.t(le.value)}:{},{M:e.f(y.value,((t,a,u)=>e.e({a:Ge.value===a},Ge.value===a?{b:e.n(st.value)}:{},{c:"num"===t.type},"num"===t.type?{d:"7066366f-5-"+u,e:e.p({card:{rank:null!=t.rank?t.rank:Number(t.value),suit:t.suit||"S",value:t.value},size:"sm",fill:!0})}:{f:e.t(t.value)},{g:e.n("num"===t.type?"num":"op"),h:e.n({"just-inserted":a===Je.value,dragging:Qe.value.token&&"tok"===Qe.value.token.type&&Qe.value.token.index===a}),i:e.o((e=>Kt({type:"tok",index:a,value:t.value},e)),a),j:e.o((e=>zt(e)),a),k:e.o((e=>Qt()),a),l:a}))),N:Ge.value===y.value.length},Ge.value===y.value.length?{O:e.n(st.value)}:{},{P:"scale("+lt.value+")",Q:Qe.value.active?1:"",R:0!==y.value.length||le.value?"":1,S:E.value+"px",T:"pro"===k.value,U:e.f([0,2],((t,a,u)=>e.e({a:b.value[t]&&b.value[t].alive&&"card"===b.value[t].source},b.value[t]&&b.value[t].alive&&"card"===b.value[t].source?{b:"7066366f-6-"+u,c:e.p({card:b.value[t].card,size:"md"})}:b.value[t]&&b.value[t].alive?{e:e.t(b.value[t].label)}:{},{d:b.value[t]&&b.value[t].alive,f:e.n(gt(t)),g:e.o((e=>bt(t)),"basic-left-"+t),h:"basic-left-"+t}))),V:e.f(["+","-","×","÷"],((t,a,u)=>({a:e.t(t),b:"basic-op-"+t,c:w.value.operator===t?1:"",d:e.o((e=>function(e){"basic"!==k.value||ve.value||(null!==w.value.first?w.value.operator!==e?w.value.operator=e:w.value.operator=null:Se("请先选择一个数字",{interactive:!0}))}(t)),"basic-op-"+t)}))),W:e.s(R.value),X:e.f([1,3],((t,a,u)=>e.e({a:b.value[t]&&b.value[t].alive&&"card"===b.value[t].source},b.value[t]&&b.value[t].alive&&"card"===b.value[t].source?{b:"7066366f-7-"+u,c:e.p({card:b.value[t].card,size:"md"})}:b.value[t]&&b.value[t].alive?{e:e.t(b.value[t].label)}:{},{d:b.value[t]&&b.value[t].alive,f:e.n(gt(t)),g:e.o((e=>bt(t)),"basic-right-"+t),h:"basic-right-"+t}))),Y:"pro"!==k.value,Z:e.o(wt),aa:e.p({icon:"undo",label:"撤销",disabled:ht.value}),ab:e.o(Mt),ac:e.p({icon:"refresh",label:"重置",disabled:pt.value}),ad:e.o(Tt),ae:e.p({icon:"lightbulb",label:"提示"}),af:e.o(Ut),ag:e.p({icon:"skip_next",label:"下一题"}),ah:ae.value},(ae.value,{}),{ai:ue.value},ue.value?e.e({aj:ne.value},ne.value?{ak:e.t(ne.value)}:{}):{},{al:ee.value.visible},ee.value.visible?{am:e.o(Ht),an:e.s(te.value),ao:e.o((()=>{})),ap:e.o(Rt)}:{},{aq:e.unref(Me).visible},e.unref(Me).visible?{ar:e.t(e.unref(Me).text),as:e.o((()=>{})),at:e.unref(Me).interactive?1:"",av:e.o(((...t)=>e.unref(Te)&&e.unref(Te)(...t)))}:{},{aw:Ze.value?1:"",ax:e.s(ye.value),ay:e.o(((...t)=>e.unref(Re).handleTouchStart&&e.unref(Re).handleTouchStart(...t))),az:e.o(((...t)=>e.unref(Re).handleTouchMove&&e.unref(Re).handleTouchMove(...t))),aA:e.o(((...t)=>e.unref(Re).handleTouchEnd&&e.unref(Re).handleTouchEnd(...t))),aB:e.o(((...t)=>e.unref(Re).handleTouchCancel&&e.unref(Re).handleTouchCancel(...t)))})}},y=e._export_sfc(m,[["__scopeId","data-v-7066366f"]]);wx.createPage(y);
+"use strict";
+const e = require("../../common/vendor.js"),
+  t = require("../../utils/solver.js"),
+  a = require("../../utils/store.js"),
+  u = require("../../utils/useSafeArea.js"),
+  l = require("../../utils/tab-cache.js"),
+  n = require("../../utils/calc.js"),
+  r = require("../../core/basic-mode.js"),
+  i = require("../../core/game-engine.js"),
+  o = require("../../utils/mistakes.js"),
+  c = require("../../utils/hints.js"),
+  s = require("../../utils/edge-exit.js"),
+  v = require("../../utils/prefs.js"),
+  d = require("../../utils/avatar.js"),
+  f = require("../../utils/navigation.js");
+Math || (h + p + x)();
+const h = () => "../../components/AppNavBar.js",
+  p = () => "../../components/CircleActionButton.js",
+  x = () => "../../components/PlayingCard.js",
+  m = {
+    __name: "index",
+    setup(h) {
+      const p = e.ref([{
+          rank: 1,
+          suit: "S"
+        }, {
+          rank: 5,
+          suit: "H"
+        }, {
+          rank: 5,
+          suit: "D"
+        }, {
+          rank: 5,
+          suit: "C"
+        }]),
+        x = e.ref(null),
+        m = e.ref([0, 0, 0, 0]),
+        y = e.ref([]);
+      let g = "basic";
+      try {
+        const e = v.getLastMode();
+        "pro" !== e && "basic" !== e || (g = e)
+      } catch (ua) {}
+      const k = e.ref(g);
+      try {
+        v.setLastMode(g)
+      } catch (ua) {}
+      const b = e.ref([]),
+        w = e.ref({
+          first: null,
+          operator: null
+        }),
+        M = e.ref([]),
+        S = e.ref(""),
+        T = e.ref(""),
+        A = e.ref({
+          totalHeight: 0,
+          buttonHeight: 0
+        }),
+        R = e.computed((() => {
+          const e = A.value || {},
+            t = Number(e.buttonHeight),
+            a = Number(e.totalHeight);
+          if (!Number.isFinite(t) || t <= 0) return {};
+          const u = {
+            "--basic-ops-button-height": `${t}px`
+          };
+          return Number.isFinite(a) && a > 0 && (u.height = `${a}px`), u
+        })),
+        C = (() => {
+          try {
+            const e = v.getGameplayPrefs();
+            return {
+              rankMode: e.rankMode || "jqk-11-12-13",
+              deckSource: e.deckSource || "regular",
+              mixWeight: Number.isFinite(e.mixWeight) ? e.mixWeight : 50,
+              haptics: !!e.haptics,
+              sfx: !!e.sfx,
+              reducedMotion: !!e.reducedMotion
+            }
+          } catch (ua) {
+            return {
+              rankMode: "jqk-11-12-13",
+              deckSource: "regular",
+              mixWeight: 50,
+              haptics: !0,
+              sfx: !0,
+              reducedMotion: !1
+            }
+          }
+        })(),
+        H = e.ref({
+          ...C
+        }),
+        D = e.ref({
+          ...C
+        }),
+        I = e.ref("jqk-11-12-13" === H.value.rankMode),
+        N = e.ref(!!H.value.haptics),
+        j = e.ref(!!H.value.sfx),
+        $ = e.ref(!!H.value.reducedMotion),
+        L = e.ref(!1),
+        q = e.ref(!1),
+        E = e.ref("pro" === g ? 80 : 70),
+        F = e.ref(null),
+        U = e.ref(!1),
+        P = e.computed((() => (F.value && "string" == typeof F.value.name ? F.value.name.trim() : "") || "未登录")),
+        W = e.computed((() => F.value && F.value.avatar ? F.value.avatar : "")),
+        B = e.computed((() => function (e) {
+          if (!e) return "U";
+          const t = String(e).trim();
+          return t.length ? t[0].toUpperCase() : "U"
+        }(P.value))),
+        _ = e.computed((() => function (e) {
+          const t = String((null == e ? void 0 : e.id) || (null == e ? void 0 : e.name) || "");
+          if (!t) return "#e2e8f0";
+          let a = 0;
+          for (let l = 0; l < t.length; l++) a = 33 * a + t.charCodeAt(l) >>> 0;
+          const u = ["#e2e8f0", "#fde68a", "#bbf7d0", "#bfdbfe", "#fecaca", "#f5d0fe", "#c7d2fe"];
+          return u[a % u.length]
+        }(F.value))),
+        O = e.ref([]),
+        K = e.ref(H.value.deckSource || "regular"),
+        z = e.ref(H.value.mixWeight ?? 50),
+        Q = e.ref(new Set),
+        X = e.ref(0),
+        Y = e.ref("regular"),
+        G = e.ref(""),
+        J = e.ref(0),
+        V = e.ref(0),
+        Z = e.ref(0);
+      e.ref(!1);
+      const ee = e.ref({
+          visible: !1,
+          left: 0,
+          top: 0
+        }),
+        te = e.computed((() => ({
+          left: `${ee.value.left}px`,
+          top: `${ee.value.top}px`
+        }))),
+        ae = e.ref(!1),
+        ue = e.ref(!1),
+        le = e.ref(""),
+        ne = e.ref(""),
+        re = e.ref(Date.now()),
+        ie = e.ref(Date.now()),
+        oe = e.ref(!1),
+        ce = e.ref(0),
+        se = e.ref(null),
+        ve = e.ref(!1),
+        de = e.ref(null),
+        fe = e.ref(!1),
+        {
+          safeTop: he,
+          safeBottom: pe,
+          windowHeight: xe,
+          refreshSafeArea: me
+        } = u.useSafeArea(),
+        ye = e.computed((() => ({
+          paddingTop: `${Math.max(0, he.value || 0)}px`
+        }))),
+        ge = e.ref(u.rpxToPx(520)),
+        ke = e.ref(u.rpxToPx(320)),
+        be = e.ref(0);
+      let we = null;
+      const {
+        hintState: Me,
+        showHint: Se,
+        hideHint: Te
+      } = c.useFloatingHint(), Ae = {
+        SAME_INDEX: "请选择另一张牌",
+        INACTIVE_SLOT: "请选择有效的数字",
+        DIVIDE_BY_ZERO: "除数不能为 0",
+        INVALID_OPERATION: "无法进行该运算，请重试"
+      };
+      const Re = s.useEdgeExit({
+        showHint: Se,
+        onExit: () => Pt()
+      });
+      let Ce = 0;
+      e.onBackPress((() => {
+        const t = Date.now();
+        if (t - Ce < 2e3) Pt();
+        else {
+          Ce = t;
+          try {
+            Se("再按一次返回退出应用", {
+              duration: 2e3,
+              interactive: !1
+            })
+          } catch (ua) {
+            e.index.showToast({
+              title: "再按一次退出应用",
+              icon: "none"
+            })
+          }
+        }
+        return !0
+      }));
+      const He = n.formatMs,
+        De = n.formatMsShort;
+
+      function Ie(e) {
+        return "jqk-1" === e ? "jqk-1" : "jqk-11-12-13"
+      }
+
+      function Ne(e) {
+        return "mistakes" === e || "mix" === e ? e : "mistake" === e ? "mistakes" : "regular"
+      }
+
+      function je(e) {
+        return Number.isFinite(e) ? Math.min(100, Math.max(0, Math.round(e))) : 50
+      }
+
+      function $e(e) {
+        const t = e && "object" == typeof e ? e : {};
+        return {
+          rankMode: Ie(t.rankMode),
+          deckSource: Ne(t.deckSource),
+          mixWeight: je(t.mixWeight),
+          haptics: "boolean" != typeof t.haptics || t.haptics,
+          sfx: "boolean" != typeof t.sfx || t.sfx,
+          reducedMotion: "boolean" == typeof t.reducedMotion && t.reducedMotion
+        }
+      }
+
+      function Le() {
+        try {
+          const t = v.getGameplayPrefs();
+          if (t && t.rankMigrationNotice) {
+            try {
+              e.index.showToast({
+                title: "已迁移到新规则：JQK 仅支持 1 或 11/12/13",
+                icon: "none",
+                duration: 2400
+              })
+            } catch (ua) {}
+            try {
+              v.consumeRankMigrationNotice()
+            } catch (ua) {}
+            t.rankMigrationNotice = !1
+          }
+          const a = $e(t);
+          D.value = {
+            ...a
+          };
+          try {
+            const e = v.getLastMode && v.getLastMode();
+            e && vt(e)
+          } catch (ua) {}
+        } catch (ua) {}
+      }
+
+      function qe() {
+        Ee(), we || (we = setTimeout((() => {
+          we = null,
+            function () {
+              try {
+                e.nextTick$1((() => {
+                  var t, a;
+                  const l = e.index.createSelectorQuery();
+                  l && Ve && l.in(Ve), null == (t = null == l ? void 0 : l.select("#gameTopBox")) || t.boundingClientRect((e => {
+                    e && Number.isFinite(e.height) && (ge.value = Math.max(e.height, u.rpxToPx(520)))
+                  })), null == (a = null == l ? void 0 : l.select("#gameBottomBox")) || a.boundingClientRect((e => {
+                    e && Number.isFinite(e.height) && (ke.value = Math.max(e.height, u.rpxToPx(320)))
+                  })), null == l || l.exec((() => {
+                    Ee(), ot()
+                  }))
+                }))
+              } catch (ua) {
+                Ee()
+              }
+            }()
+        }), 16))
+      }
+
+      function Ee() {
+        const e = "undefined" != typeof window && Number.isFinite(window.innerHeight) ? window.innerHeight : 0,
+          t = xe.value || e;
+        if (!t) return void(be.value = Math.max(0, be.value || 0));
+        const a = Math.max(ge.value || 0, u.rpxToPx(520)),
+          l = Math.max(ke.value || 0, u.rpxToPx(320)),
+          n = t - Math.max(0, he.value || 0) - a - l - Math.max(0, pe.value || 0);
+        be.value = Math.max(0, n)
+      }
+
+      function Fe() {
+        U.value = !0
+      }
+
+      function Ue() {
+        try {
+          const t = {
+            deck: O.value || [],
+            cards: p.value || [],
+            tokens: (y.value || []).map((e => ({
+              type: e.type,
+              value: e.value,
+              rank: e.rank,
+              suit: e.suit
+            }))),
+            usedByCard: m.value || [],
+            faceUseHigh: !!I.value,
+            rankMode: H.value.rankMode,
+            handRecorded: !!L.value,
+            timeoutRecorded: !!q.value,
+            handStartTs: re.value || 0,
+            hintWasUsed: !!oe.value,
+            attemptCount: ce.value || 0,
+            handsPlayed: J.value || 0,
+            successCount: V.value || 0,
+            failCount: Z.value || 0,
+            handFailedOnce: !!fe.value,
+            solution: x.value || null,
+            deckSource: K.value || "regular",
+            mixWeight: z.value,
+            haptics: N.value,
+            sfx: j.value,
+            reducedMotion: $.value,
+            mistakeRunUsed: Array.from(Q.value || []),
+            mistakeRunStamp: X.value || 0,
+            currentHandSource: Y.value || "regular",
+            currentMistakeKey: G.value || "",
+            mode: k.value || "basic"
+          };
+          e.index.setStorageSync("tf24_game_session_v1", JSON.stringify(t))
+        } catch (ua) {}
+      }
+
+      function Pe() {
+        try {
+          const a = e.index.getStorageSync("tf24_game_session_v1");
+          if (!a) return !1;
+          const u = "string" == typeof a ? JSON.parse(a) : a;
+          if (!u || !Array.isArray(u.deck) || !Array.isArray(u.cards)) return !1;
+          if (4 === (u.cards || []).length) {
+            const a = "pro" === u.mode ? "pro" : "basic";
+            let l = null;
+            try {
+              l = v.getLastMode ? v.getLastMode() : null
+            } catch (ua) {
+              l = null
+            }
+            if (l && l !== a) return vt(l), Rt(), !1;
+            O.value = u.deck, p.value = u.cards, kt(), y.value = Array.isArray(u.tokens) ? u.tokens : [], m.value = Array.isArray(u.usedByCard) ? u.usedByCard : [0, 0, 0, 0];
+            const r = $e({
+              rankMode: Ie(u.rankMode || (u.faceUseHigh ? "jqk-11-12-13" : "jqk-1")),
+              deckSource: u.deckSource,
+              mixWeight: u.mixWeight,
+              haptics: u.haptics,
+              sfx: u.sfx,
+              reducedMotion: u.reducedMotion
+            });
+            if (H.value = {
+                ...r
+              }, D.value = {
+                ...D.value,
+                ...r
+              }, I.value = "jqk-11-12-13" === r.rankMode, K.value = r.deckSource, z.value = r.mixWeight, N.value = r.haptics, j.value = r.sfx, $.value = r.reducedMotion, L.value = !!u.handRecorded, q.value = !!u.timeoutRecorded, re.value = u.handStartTs || Date.now(), oe.value = !!u.hintWasUsed, ce.value = u.attemptCount || 0, J.value = u.handsPlayed || 0, V.value = u.successCount || 0, Z.value = u.failCount || 0, fe.value = !!u.handFailedOnce, x.value = u.solution || null, Q.value = new Set(Array.isArray(u.mistakeRunUsed) ? u.mistakeRunUsed : []), X.value = u.mistakeRunStamp || 0, Y.value = "mistake" === u.currentHandSource ? "mistake" : "regular", G.value = "string" == typeof u.currentMistakeKey ? u.currentMistakeKey : "", k.value = a, Rt(), !x.value) try {
+              const e = (p.value || []).map((e => n.mapCardRank(e.rank, I.value)));
+              x.value = 4 === e.length ? t.solve24(e) : null
+            } catch (ua) {
+              x.value = null
+            }
+            return e.nextTick$1((() => {
+              aa(), it(), Zt()
+            })), !0
+          }
+          return !1
+        } catch (ua) {
+          return !1
+        }
+      }
+      const We = e.computed((() => {
+          if ("mistakes" === K.value) {
+            const e = et.value;
+            if (!e) return 0;
+            const t = o.getActivePool(e) || [];
+            if (!Array.isArray(t) || 0 === t.length) return 0;
+            const a = Q.value instanceof Set ? Q.value : new Set;
+            let u = 0;
+            for (const l of t) l && l.key && (a.has(l.key) || (u += 1));
+            return 4 * u
+          }
+          return Array.isArray(O.value) ? O.value.length : 0
+        })),
+        Be = e.computed((() => {
+          const e = V.value + Z.value;
+          return e ? Math.round(100 * V.value / e) : 0
+        })),
+        _e = e.computed((() => {
+          const e = re.value || Date.now(),
+            t = (ie.value || Date.now()) - e;
+          return t > 0 ? t : 0
+        }));
+      let Oe = null;
+
+      function Ke() {
+        if (!Oe) try {
+          Oe = setInterval((() => {
+            const e = Date.now();
+            ie.value = e;
+            const t = re.value || e;
+            !q.value && e - t >= 12e4 && function () {
+              if (q.value || L.value) return;
+              q.value = !0, L.value = !0, fe.value = !0;
+              const e = Date.now() - (re.value || Date.now()),
+                t = e > 0 ? e : 12e4,
+                u = n.computeExprStats(y.value);
+              J.value += 1, Z.value += 1;
+              try {
+                a.pushRound({
+                  success: !1,
+                  timeMs: t,
+                  hintUsed: !!oe.value,
+                  retries: ce.value || 0,
+                  ops: u.ops,
+                  exprLen: u.exprLen,
+                  maxDepth: u.maxDepth,
+                  faceUseHigh: !!I.value,
+                  hand: {
+                    cards: (p.value || []).map((e => ({
+                      rank: e.rank,
+                      suit: e.suit
+                    })))
+                  },
+                  expr: at.value
+                }), Et()
+              } catch (ua) {}
+              if (et.value) try {
+                o.recordRoundResult({
+                  userId: et.value,
+                  nums: tt.value,
+                  success: !1
+                })
+              } catch (ua) {}
+              try {
+                Se("超过120秒，已记失败，可继续作答", 2e3)
+              } catch (ua) {}
+            }()
+          }), 100)
+        } catch (ua) {
+          Oe = null
+        }
+      }
+
+      function ze() {
+        if (Oe) {
+          try {
+            clearInterval(Oe)
+          } catch (ua) {}
+          Oe = null
+        }
+      }
+      const Qe = e.ref({
+          active: !1,
+          token: null,
+          x: 0,
+          y: 0,
+          startX: 0,
+          startY: 0,
+          moved: !1
+        }),
+        Xe = e.ref({
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0
+        }),
+        Ye = e.ref([]),
+        Ge = e.ref(-1),
+        Je = e.ref(-1),
+        {
+          proxy: Ve
+        } = e.getCurrentInstance(),
+        Ze = e.ref(!1),
+        et = e.computed((() => F.value && F.value.id ? F.value.id : "")),
+        tt = e.computed((() => (p.value || []).map((e => e.rank)).sort(((e, t) => e - t))));
+      e.watch([he, xe, pe], (() => {
+        qe()
+      })), e.watch(et, ((t, a) => {
+        if (t === a) return;
+        const u = "mistakes" === K.value;
+        jt(u ? Date.now() : 0), !t && u ? (Lt("regular", {
+          scheduleNext: !1
+        }), jt(0), e.nextTick$1((() => {
+          Dt()
+        }))) : u && t && e.nextTick$1((() => {
+          Dt()
+        }))
+      }));
+      const at = e.computed((() => n.tokensToExpression(y.value, I.value))),
+        ut = e.computed((() => `left:${Qe.value.x}px; top:${Qe.value.y}px;`)),
+        lt = e.ref(1),
+        nt = e.ref("normal"),
+        rt = e.computed((() => "tight" === nt.value ? "ops-tight" : "compact" === nt.value ? "ops-compact" : ""));
+
+      function it() {
+        E.value = "pro" === k.value ? 80 : 70;
+        try {
+          const t = e.index.getSystemInfoSync && e.index.getSystemInfoSync() || {},
+            a = t.windowHeight || t.screenHeight || 0;
+          if ("pro" !== k.value) return void(nt.value = "normal");
+          nt.value = a && a < 640 ? "tight" : a && a < 740 ? "compact" : "normal"
+        } catch (ua) {
+          nt.value = "normal"
+        }
+      }
+
+      function ot() {
+        "basic" === k.value ? e.nextTick$1((() => {
+          var t;
+          try {
+            const a = e.index.createSelectorQuery();
+            a && Ve && a.in(Ve), null == (t = null == a ? void 0 : a.select(".basic-card")) || t.boundingClientRect(), null == a || a.exec((e => {
+              const t = Array.isArray(e) ? e[0] : null,
+                a = t && Number.isFinite(null == t ? void 0 : t.height) ? t.height : 0;
+              if (!a) return;
+              const l = 2 * a + Math.max(0, Number(u.rpxToPx ? u.rpxToPx(18) : 0)),
+                n = (l - 3 * Math.max(0, Number(u.rpxToPx ? u.rpxToPx(12) : 0))) / 4;
+              !Number.isFinite(n) || n <= 0 || (A.value = {
+                totalHeight: l,
+                buttonHeight: n
+              })
+            }))
+          } catch (ua) {}
+        })) : A.value = {
+          totalHeight: 0,
+          buttonHeight: 0
+        }
+      }
+      it();
+      const ct = e.computed((() => {
+          const e = Qe.value.token;
+          return e ? "num" === e.type ? n.labelForRank(e.rank || +e.value) : "tok" === e.type ? /^(10|11|12|13|[1-9])$/.test(e.value) ? n.labelForRank(+e.value) : e.value : e.value || "" : ""
+        })),
+        st = e.computed((() => {
+          const e = Qe.value.token;
+          return Qe.value.active && e ? "num" === e.type ? "num" : "op" === e.type ? "op" : "tok" === e.type && /^(10|11|12|13|[1-9])$/.test(e.value) ? "num" : "op" : "op"
+        }));
+
+      function vt(e) {
+        const t = "pro" === e ? "pro" : "basic";
+        k.value !== t && (k.value = t), it(), ot()
+      }
+
+      function dt(e) {
+        vt(e)
+      }
+
+      function ft() {
+        try {
+          const e = v.getLastMode ? v.getLastMode() : null;
+          e && vt(e)
+        } catch (ua) {}
+      }
+      const ht = e.computed((() => "pro" === k.value ? 0 === y.value.length : 0 === M.value.length)),
+        pt = e.computed((() => "pro" === k.value && 0 === y.value.length)),
+        xt = e.computed((() => "pro" !== k.value || 0 === y.value.length));
+
+      function mt() {
+        le.value && (le.value = "")
+      }
+
+      function yt() {
+        Se("表达式不合法，请重试", 1600)
+      }
+
+      function gt(e) {
+        const t = b.value[e];
+        return {
+          hidden: !t || !t.alive,
+          selected: w.value.first === e,
+          result: !(!t || !t.alive || "value" !== t.source)
+        }
+      }
+
+      function kt() {
+        const e = r.createBasicState(p.value || [], I.value);
+        b.value = e.slots, w.value = {
+          first: null,
+          operator: null
+        }, M.value = [], S.value = e.expression, T.value = e.displayExpression
+      }
+
+      function bt(e) {
+        if ("basic" !== k.value || ve.value) return;
+        const t = b.value[e];
+        if (!t || !t.alive) return;
+        const a = w.value;
+        if (a.operator && null !== a.first) return a.first === e ? void(w.value = {
+          first: null,
+          operator: null
+        }) : void
+        function (e, t, a) {
+          const u = r.combineBasicSlots({
+            slots: b.value,
+            history: M.value,
+            expression: S.value,
+            displayExpression: T.value
+          }, e, t, a);
+          if (!u.ok) return w.value = {
+            first: null,
+            operator: null
+          }, void(u.err && (l = u.err, Se(Ae[l] || "操作无效，请重试", {
+            interactive: !0
+          })));
+          var l;
+          const n = u.data;
+          b.value = n.slots, M.value = n.history, S.value = n.expression, T.value = n.displayExpression;
+          let i = null;
+          for (let r = 0; r < n.slots.length; r++)
+            if (n.slots[r] && n.slots[r].alive && "value" === n.slots[r].source) {
+              i = r;
+              break
+            } w.value = {
+            first: i,
+            operator: null
+          }, ne.value = "", 1 === n.aliveCount && Ft({
+            ok: !!n.isSolved,
+            expression: n.exprForRecord,
+            valueFraction: n.result,
+            stats: n.stats,
+            origin: "basic",
+            allowRetry: !n.isSolved
+          });
+          try {
+            Ue()
+          } catch (ua) {}
+        }(a.first, e, a.operator);
+        a.first !== e ? w.value = {
+          first: e,
+          operator: null
+        } : w.value = {
+          first: null,
+          operator: null
+        }
+      }
+
+      function wt() {
+        if ("pro" === k.value) {
+          if (!y.value.length) return;
+          Yt(y.value.length - 1);
+          try {
+            Ue()
+          } catch (ua) {}
+        } else ! function () {
+          const e = r.undoBasicHistory(M.value);
+          if (!e.ok) return;
+          const t = e.data;
+          M.value = t.history, b.value = t.slots, S.value = t.expression, T.value = t.displayExpression, w.value = {
+            first: null,
+            operator: null
+          }, ne.value = "";
+          try {
+            Ue()
+          } catch (ua) {}
+        }()
+      }
+
+      function Mt() {
+        if ("pro" === k.value) {
+          if (!y.value.length && m.value.every((e => !e))) return;
+          y.value = [], m.value = [0, 0, 0, 0], le.value = "", ne.value = "", e.nextTick$1((() => {
+            it(), Zt()
+          }));
+          try {
+            Ue()
+          } catch (ua) {}
+        } else ! function () {
+          kt(), ne.value = "";
+          try {
+            Ue()
+          } catch (ua) {}
+        }()
+      }
+
+      function St() {
+        xt.value || function () {
+          const e = m.value.reduce(((e, t) => e + (t ? 1 : 0)), 0);
+          if (ne.value = "", 4 !== e || !n.isExpressionComplete(y.value)) return void yt();
+          const a = at.value;
+          if (!a) return void yt();
+          ce.value += 1;
+          const u = t.evaluateExprToFraction(a);
+          Ft({
+            ok: u && u.equalsInt && u.equalsInt(24),
+            expression: a,
+            valueFraction: u,
+            stats: n.computeExprStats(y.value),
+            origin: "pro"
+          })
+        }()
+      }
+
+      function Tt() {
+        ! function () {
+          if (oe.value = !0, !x.value) try {
+            const e = (p.value || []).map((e => n.mapCardRank(e.rank, I.value)));
+            x.value = 4 === e.length ? t.solve24(e) : null
+          } catch (ua) {
+            x.value = null
+          }
+          if (!L.value) {
+            L.value = !0, J.value += 1, Z.value += 1;
+            try {
+              const e = n.computeExprStats(y.value);
+              a.pushRound({
+                success: !1,
+                timeMs: Date.now() - (re.value || Date.now()),
+                hintUsed: !0,
+                retries: ce.value || 0,
+                ops: e.ops,
+                exprLen: e.exprLen,
+                maxDepth: e.maxDepth,
+                faceUseHigh: !!I.value,
+                hand: {
+                  cards: (p.value || []).map((e => ({
+                    rank: e.rank,
+                    suit: e.suit
+                  })))
+                },
+                expr: at.value
+              }), Et()
+            } catch (ua) {}
+            if (et.value) try {
+              o.recordRoundResult({
+                userId: et.value,
+                nums: tt.value,
+                success: !1
+              })
+            } catch (ua) {}
+          }
+          if ("basic" === k.value) {
+            fe.value = !0;
+            const e = x.value ? "答案：" + x.value : "暂无提示";
+            T.value = e, Se(e, 2e3)
+          } else le.value = x.value ? "答案：" + x.value : "暂无提示";
+          try {
+            Ue()
+          } catch (ua) {}
+        }()
+      }
+
+      function At() {
+        O.value = i.newDeck()
+      }
+
+      function Rt() {
+        ee.value = {
+          visible: !1,
+          left: 0,
+          top: 0
+        }
+      }
+
+      function Ct() {
+        ee.value.visible ? Rt() : function () {
+          try {
+            e.index.createSelectorQuery().in(Ve).select("#timerCell").boundingClientRect().exec((t => {
+              const [a] = t || [];
+              if (!a) return void(ee.value = {
+                visible: !0,
+                left: 0,
+                top: 0
+              });
+              const u = e.index.getSystemInfoSync && e.index.getSystemInfoSync() || {};
+              let l = (a.bottom || (a.top || 0) + (a.height || 0)) + 8;
+              const n = u && Number.isFinite(u.windowHeight) ? u.windowHeight - 96 : 0;
+              n && l > n && (l = n);
+              const r = a.left + a.width / 2;
+              ee.value = {
+                visible: !0,
+                left: r,
+                top: l
+              }
+            }))
+          } catch (ua) {
+            ee.value = {
+              visible: !0,
+              left: 0,
+              top: 0
+            }
+          }
+        }()
+      }
+
+      function Ht() {
+        Rt(), ne.value = "", le.value = "", Dt()
+      }
+      async function Dt() {
+        ! function () {
+          const e = D.value || C;
+          H.value = {
+            ...e
+          }, I.value = "jqk-11-12-13" === H.value.rankMode, K.value = H.value.deckSource, z.value = H.value.mixWeight, N.value = H.value.haptics, j.value = H.value.sfx, $.value = H.value.reducedMotion, it()
+        }(), Rt();
+        const t = await async function () {
+          if ("mistakes" === K.value) {
+            const e = await Nt();
+            return e || await It()
+          }
+          if ("mix" === K.value) {
+            if (100 * Math.random() < je(z.value)) {
+              const e = await Nt({
+                silent: !0
+              });
+              if (e) return e
+            }
+            const e = await It();
+            return e || await Nt({
+              silent: !0
+            })
+          }
+          return await It()
+        }();
+        if (t) {
+          ve.value = !1, de.value = null, fe.value = !1, L.value = !1, q.value = !1, ce.value = 0, oe.value = !1, ne.value = "", le.value = "", Array.isArray(t.deck) && (O.value = t.deck), p.value = Array.isArray(t.cards) ? t.cards : [], Y.value = "mistake" === t.source ? "mistake" : "regular", G.value = "mistake" === t.source && t.mistakeKey || "", x.value = t.solution || null, y.value = [], m.value = [0, 0, 0, 0], L.value = !1, re.value = Date.now(), oe.value = !1, ce.value = 0, e.nextTick$1((() => {
+            it(), ot()
+          }));
+          try {
+            Ue()
+          } catch (ua) {}
+        }
+      }
+      async function It() {
+        if ((!Array.isArray(O.value) || O.value.length < 4) && At(), !Array.isArray(O.value) || O.value.length < 4) return qt(), null;
+        const e = i.drawSolvableHand(O.value, I.value, t.solve24);
+        return e.ok ? {
+          source: "normal",
+          cards: e.data.cards,
+          deck: e.data.deck,
+          solution: e.data.solution
+        } : (qt(), null)
+      }
+      async function Nt(a = {}) {
+        const u = !!a.silent,
+          l = et.value;
+        if (!l) return u || (Se("请先选择用户", 1600), Lt("regular", {
+          scheduleNext: !1
+        })), null;
+        const r = o.getActivePool(l) || [];
+        if (!Array.isArray(r) || 0 === r.length) return u || await new Promise((t => {
+          const a = () => {
+            Lt("regular"), t(null)
+          };
+          try {
+            e.index.showModal({
+              title: "提示",
+              content: "无错题，切换到整副牌。",
+              confirmText: "OK",
+              showCancel: !1,
+              success: () => a(),
+              fail: () => a()
+            })
+          } catch (ua) {
+            a()
+          }
+        })), null;
+        const i = Q.value instanceof Set ? Q.value : new Set,
+          c = r.filter((e => e && e.key && !i.has(e.key)));
+        if (!c.length) return u || await new Promise((t => {
+          const a = () => {
+            $t(), t(null)
+          };
+          try {
+            e.index.showActionSheet({
+              title: "本轮错题已出完",
+              itemList: ["重新出题", "切换整副", "去统计"],
+              success: e => {
+                const a = "number" == typeof (null == e ? void 0 : e.tapIndex) ? e.tapIndex : -1;
+                0 === a ? $t() : 1 === a ? Lt("regular") : 2 === a ? Bt() : $t(), t(null)
+              },
+              fail: () => a()
+            })
+          } catch (ua) {
+            a()
+          }
+        })), null;
+        const s = c[Math.floor(Math.random() * c.length)],
+          v = function (e) {
+            const t = ["S", "H", "D", "C"];
+            return (Array.isArray(e) ? e : []).map(((e, a) => ({
+              rank: Number.isFinite(+e) ? Math.min(13, Math.max(1, Math.floor(+e))) : 1,
+              suit: t[a % t.length]
+            })))
+          }(Array.isArray(null == s ? void 0 : s.nums) ? s.nums : []);
+        let d = null;
+        try {
+          const e = v.map((e => n.mapCardRank(e.rank, I.value)));
+          d = 4 === e.length ? t.solve24(e) : null
+        } catch (ua) {
+          d = null
+        }
+        const f = new Set(i);
+        f.add(s.key), Q.value = f;
+        try {
+          Ue()
+        } catch (ua) {}
+        return {
+          source: "mistake",
+          cards: v,
+          deck: O.value,
+          solution: d,
+          mistakeKey: s.key
+        }
+      }
+
+      function jt(e = 0) {
+        Q.value = new Set, X.value = e, G.value = ""
+      }
+
+      function $t() {
+        jt(Date.now());
+        try {
+          Ue()
+        } catch (ua) {}
+        e.nextTick$1((() => {
+          "mistakes" === K.value && Dt()
+        }))
+      }
+
+      function Lt(t, a = {}) {
+        const u = Ne(t);
+        if (K.value !== u)
+          if ("mistakes" !== u || et.value) {
+            if (K.value = u, D.value = {
+                ...D.value,
+                deckSource: u
+              }, H.value = {
+                ...H.value,
+                deckSource: u
+              }, "mix" !== u && (D.value.mixWeight = z.value), !1 !== a.persist) {
+              try {
+                v.setGameplayPrefs({
+                  deckSource: u
+                })
+              } catch (ua) {}
+              Le()
+            }
+            "regular" === u && (!Array.isArray(O.value) || O.value.length < 4) && At();
+            try {
+              Ue()
+            } catch (ua) {}!1 !== a.scheduleNext && e.nextTick$1((() => {
+              Dt()
+            }))
+          } else Se("请先选择用户", 1600)
+      }
+
+      function qt() {
+        try {
+          e.index.showModal({
+            title: "牌库用尽",
+            content: "余牌无解或整副用完，是否重新洗牌？",
+            confirmText: "重洗",
+            cancelText: "进入统计",
+            success: t => {
+              if (t.confirm) At(), J.value = 0, V.value = 0, Z.value = 0, e.nextTick$1((() => Dt()));
+              else try {
+                e.index.reLaunch({
+                  url: "/pages/stats/index"
+                })
+              } catch (a) {
+                try {
+                  e.index.navigateTo({
+                    url: "/pages/stats/index"
+                  })
+                } catch (ua) {}
+              }
+            }
+          })
+        } catch (ua) {
+          At(), J.value = 0, V.value = 0, Z.value = 0, e.nextTick$1((() => Dt()))
+        }
+      }
+
+      function Et() {
+        try {
+          const e = a.getCurrentUser && a.getCurrentUser();
+          if (!e || !e.id) return void(se.value = null);
+          const t = a.readStatsExtended && a.readStatsExtended(e.id);
+          if (t && (null == e ? void 0 : e.id)) try {
+            l.mergeCachedStatsExt({
+              [e.id]: t
+            })
+          } catch (ua) {}
+          const u = (t && Array.isArray(t.rounds) ? t.rounds.slice().reverse() : []).find((e => e && e.success && Number.isFinite(e.timeMs)));
+          se.value = u ? u.timeMs : null
+        } catch (ua) {
+          se.value = null
+        }
+      }
+
+      function Ft({
+        ok: e,
+        expression: u,
+        valueFraction: r,
+        stats: i,
+        origin: c,
+        allowRetry: s = !1
+      }) {
+        const v = u || "",
+          d = i || n.statsFromExpressionString(v),
+          f = r || (v ? t.evaluateExprToFraction(v) : null),
+          h = Date.now() - (re.value || Date.now()),
+          x = "pro" === c ? Math.max(0, (ce.value || 1) - 1) : 0,
+          m = "pro" === c && ce.value || 0,
+          y = s && !e,
+          g = e => {
+            if (et.value) try {
+              o.recordRoundResult({
+                userId: et.value,
+                nums: tt.value,
+                success: e
+              })
+            } catch (ua) {}
+            try {
+              a.pushRound({
+                success: e,
+                timeMs: h,
+                hintUsed: !!oe.value,
+                retries: e ? x : m,
+                ops: d.ops,
+                exprLen: d.exprLen,
+                maxDepth: d.maxDepth,
+                faceUseHigh: !!I.value,
+                hand: {
+                  cards: (p.value || []).map((e => ({
+                    rank: e.rank,
+                    suit: e.suit
+                  })))
+                },
+                expr: v
+              });
+              try {
+                l.scheduleTabWarmup({
+                  delay: 200
+                })
+              } catch (ua) {}
+              e && Et()
+            } catch (ua) {}
+          };
+        if (e) {
+          const e = q.value;
+          if (ne.value = "", e) {
+            if (ve.value && "success" === de.value) {
+              try {
+                Ue()
+              } catch (ua) {}
+              return
+            }
+            ve.value = !0, de.value = "success";
+            try {
+              ae.value = !0, setTimeout((() => {
+                ae.value = !1, Dt()
+              }), 500)
+            } catch (ua) {
+              Dt()
+            }
+            try {
+              Ue()
+            } catch (ua) {}
+            return
+          }
+          if ("basic" === c && fe.value) {
+            try {
+              ae.value = !0, setTimeout((() => {
+                ae.value = !1
+              }), 500)
+            } catch (ua) {}
+            try {
+              Ue()
+            } catch (ua) {}
+            return
+          }
+          if (ve.value) {
+            if ("success" === de.value) {
+              try {
+                Ue()
+              } catch (ua) {}
+              return
+            }
+            try {
+              ae.value = !0, setTimeout((() => {
+                ae.value = !1, Dt()
+              }), 500)
+            } catch (ua) {
+              Dt()
+            }
+            try {
+              Ue()
+            } catch (ua) {}
+            return
+          }
+          ve.value = !0, de.value = "success", L.value = !0, J.value += 1, V.value += 1, g(!0);
+          try {
+            ae.value = !0, setTimeout((() => {
+              ae.value = !1, Dt()
+            }), 500)
+          } catch (ua) {
+            Dt()
+          }
+          try {
+            Ue()
+          } catch (ua) {}
+          return
+        }
+        const k = () => {
+          try {
+            f && "function" == typeof f.toString ? ne.value = "结果：" + f.toString() : ne.value = ""
+          } catch (ua) {
+            ne.value = ""
+          }
+        };
+        if (y) {
+          k(), fe.value || (fe.value = !0, de.value = "fail", L.value = !0, J.value += 1, Z.value += 1, g(!1));
+          try {
+            ue.value = !0, setTimeout((() => {
+              ue.value = !1
+            }), 500)
+          } catch (ua) {}
+          try {
+            Ue()
+          } catch (ua) {}
+        } else {
+          k(), ve.value || (ve.value = !0, de.value = "fail", L.value = !0, J.value += 1, Z.value += 1, g(!1));
+          try {
+            ue.value = !0, setTimeout((() => {
+              ue.value = !1
+            }), 500)
+          } catch (ua) {}
+          try {
+            Ue()
+          } catch (ua) {}
+        }
+      }
+
+      function Ut() {
+        if (!L.value) {
+          L.value = !0, J.value += 1, Z.value += 1;
+          try {
+            const e = n.computeExprStats(y.value);
+            a.pushRound({
+              success: !1,
+              timeMs: Date.now() - (re.value || Date.now()),
+              hintUsed: !!oe.value,
+              retries: ce.value || 0,
+              ops: e.ops,
+              exprLen: e.exprLen,
+              maxDepth: e.maxDepth,
+              faceUseHigh: !!I.value,
+              hand: {
+                cards: (p.value || []).map((e => ({
+                  rank: e.rank,
+                  suit: e.suit
+                })))
+              },
+              expr: at.value
+            }), Et()
+          } catch (ua) {}
+          if (et.value) try {
+            o.recordRoundResult({
+              userId: et.value,
+              nums: tt.value,
+              success: !1
+            })
+          } catch (ua) {}
+        }
+        Dt()
+      }
+
+      function Pt() {
+        L.value || Se("本局进度将丢失", 1200), f.exitApp({
+          fallback: () => {
+            try {
+              if ("function" == typeof e.index.switchTab) return void e.index.switchTab({
+                url: "/pages/stats/index"
+              })
+            } catch (ua) {}
+            try {
+              if ("function" == typeof e.index.reLaunch) return void e.index.reLaunch({
+                url: "/pages/stats/index"
+              })
+            } catch (ua) {}
+          }
+        })
+      }
+
+      function Wt() {
+        try {
+          e.index.navigateTo({
+            url: "/pages/login/index"
+          })
+        } catch (t) {
+          try {
+            e.index.reLaunch({
+              url: "/pages/login/index"
+            })
+          } catch (ua) {}
+        }
+      }
+
+      function Bt() {
+        try {
+          e.index.reLaunch({
+            url: "/pages/stats/index"
+          })
+        } catch (t) {
+          try {
+            e.index.navigateTo({
+              url: "/pages/stats/index"
+            })
+          } catch (ua) {}
+        }
+      }
+
+      function _t() {
+        try {
+          e.index.reLaunch({
+            url: "/pages/user/index"
+          })
+        } catch (t) {
+          try {
+            e.index.navigateTo({
+              url: "/pages/user/index"
+            })
+          } catch (ua) {}
+        }
+      }
+
+      let navigating = false      
+      function Ot() {
+        if (navigating) return
+        navigating = true
+      
+        const url = "/pages/settings/index"
+        const pages = getCurrentPages()
+        const action = pages.length >= 10 ? "reLaunch" : "navigateTo"
+      
+        e.index[action]({ url })
+          .catch(() => e.index.reLaunch({ url }))
+          .finally(() => navigating = false)
+      }
+
+      function Kt(e, t) {
+        Qe.value.active = !0, Qe.value.token = e;
+        const a = Vt(t);
+        Qe.value.x = a.x, Qe.value.y = a.y, Qe.value.startX = a.x, Qe.value.startY = a.y, Qe.value.moved = !1, Gt()
+      }
+
+      function zt(e) {
+        if (!Qe.value.active) return;
+        const t = Vt(e);
+        Qe.value.x = t.x, Qe.value.y = t.y;
+        const a = Qe.value.x - Qe.value.startX,
+          u = Qe.value.y - Qe.value.startY;
+        !Qe.value.moved && a * a + u * u > 16 && (Qe.value.moved = !0);
+        const l = Qe.value.token;
+        if (l && "tok" === l.type) {
+          const e = Qe.value.x,
+            t = Qe.value.y;
+          if (Jt(Xe.value, e, t)) {
+            const a = ea(e, t);
+            a !== l.index && a !== l.index + 1 && (ta(l.index, a), l.index = a > l.index ? a - 1 : a, Gt()), Ge.value = a
+          } else Ge.value = -1
+        } else {
+          const e = Qe.value.x,
+            t = Qe.value.y,
+            a = Jt(Xe.value, e, t);
+          Ge.value = a ? ea(e, t) : -1
+        }
+      }
+
+      function Qt() {
+        if (!Qe.value.active) return;
+        const e = Qe.value.x,
+          t = Qe.value.y,
+          a = Qe.value.token,
+          u = Jt(Xe.value, e, t);
+        if (a && !Qe.value.moved) return "tok" === a.type ? Yt(a.index) : "num" !== a.type && "op" !== a.type || (! function (e) {
+          Xt(e, y.value.length)
+        }(a), Je.value = Math.max(0, y.value.length - 1), setTimeout((() => {
+          Je.value = -1
+        }), 220)), Qe.value.active = !1, Qe.value.token = null, void(Ge.value = -1);
+        if (a && "tok" === a.type)
+          if (u) {
+            const u = ea(e, t);
+            ta(a.index, u), Je.value = Math.max(0, Math.min(u, y.value.length - 1)), setTimeout((() => {
+              Je.value = -1
+            }), 220)
+          } else Yt(a.index);
+        else if (u && a) {
+          const u = ea(e, t);
+          Xt(a, u), Je.value = Math.max(0, Math.min(u, y.value.length - 1)), setTimeout((() => {
+            Je.value = -1
+          }), 220)
+        }
+        Qe.value.active = !1, Qe.value.token = null, Ge.value = -1
+      }
+
+      function Xt(e, t) {
+        mt();
+        const a = Math.max(0, Math.min(t, y.value.length));
+        if ("num" === e.type) {
+          const t = e.cardIndex;
+          if (null == t) return;
+          if ((m.value[t] || 0) >= 1) return;
+          const u = y.value.slice();
+          u.splice(a, 0, {
+            type: "num",
+            value: e.value,
+            rank: e.rank,
+            suit: e.suit,
+            cardIndex: t
+          }), y.value = u;
+          const l = m.value.slice();
+          l[t] = 1, m.value = l
+        } else if ("op" === e.type) {
+          const t = y.value.slice();
+          t.splice(a, 0, {
+            type: "op",
+            value: e.value
+          }), y.value = t
+        }
+      }
+
+      function Yt(e) {
+        if (mt(), e < 0 || e >= y.value.length) return;
+        const t = y.value[e];
+        if (t && "num" === t.type && null != t.cardIndex) {
+          const e = m.value.slice();
+          e[t.cardIndex] = 0, m.value = e
+        }
+        y.value = y.value.slice(0, e).concat(y.value.slice(e + 1))
+      }
+
+      function Gt() {
+        e.index.createSelectorQuery().in(Ve).select("#exprZone").boundingClientRect().selectAll(".tok").boundingClientRect().exec((e => {
+          const [t, a] = e || [];
+          t && (Xe.value = {
+            left: t.left,
+            top: t.top,
+            right: t.right,
+            bottom: t.bottom
+          }), Ye.value = a || []
+        }))
+      }
+
+      function Jt(e, t, a) {
+        return t >= e.left && t <= e.right && a >= e.top && a <= e.bottom
+      }
+
+      function Vt(e) {
+        const t = e && e.touches && e.touches[0] || e && e.changedTouches && e.changedTouches[0] || e && e.detail || {
+          x: 0,
+          y: 0
+        };
+        return {
+          x: t.clientX ?? t.x ?? 0,
+          y: t.clientY ?? t.y ?? 0
+        }
+      }
+
+      function Zt() {
+        lt.value = 1, e.nextTick$1((() => {
+          e.index.createSelectorQuery().in(Ve).select("#exprZone").boundingClientRect().select("#exprRow").boundingClientRect().exec((e => {
+            const [t, a] = e || [];
+            if (!t || !a) return;
+            const u = t.width - 24,
+              l = a.width || 0;
+            if (u > 0 && l > 0) {
+              const e = Math.min(1, u / l);
+              lt.value = isFinite(e) && e > 0 ? e : 1
+            } else lt.value = 1
+          }))
+        }))
+      }
+
+      function ea(e, t) {
+        const a = Ye.value || [];
+        if (!a.length) return y.value.length;
+        let u = 0,
+          l = 1 / 0;
+        for (let r = 0; r < a.length; r++) {
+          const n = a[r],
+            i = n.left + n.width / 2 - e,
+            o = n.top + n.height / 2 - t,
+            c = i * i + o * o;
+          c < l && (l = c, u = r)
+        }
+        const n = a[u];
+        return e < n.left + n.width / 2 ? u : u + 1
+      }
+
+      function ta(e, t) {
+        if (mt(), e === t) return;
+        const a = y.value.slice(),
+          u = a.splice(e, 1)[0],
+          l = Math.max(0, Math.min(t, a.length));
+        a.splice(l, 0, u), y.value = a
+      }
+
+      function aa() {
+        try {
+          (e.index.getSystemInfoSync && e.index.getSystemInfoSync() || {}).windowHeight || "undefined" != typeof window && window.innerHeight
+        } catch (t) {}
+      }
+      return e.onMounted((() => {
+        Le();
+        try {
+          if ("function" == typeof e.index.$on) {
+            try {
+              e.index.$off("tf24:mode-changed", dt)
+            } catch (ua) {}
+            e.index.$on("tf24:mode-changed", dt)
+          }
+        } catch (ua) {}
+        a.ensureInit();
+        try {
+          e.index.hideTabBar && e.index.hideTabBar()
+        } catch (ua) {}
+        try {
+          const t = a.getUsers && a.getUsers();
+          if (0 == (t && Array.isArray(t.list) ? t.list : []).length) {
+            try {
+              e.index.showModal({
+                title: "暂无用户",
+                content: "请先新建用户后再开始程序。",
+                confirmText: "去新建",
+                showCancel: !1,
+                success: () => {
+                  try {
+                    e.index.reLaunch({
+                      url: "/pages/login/index"
+                    })
+                  } catch (t) {
+                    try {
+                      e.index.navigateTo({
+                        url: "/pages/login/index"
+                      })
+                    } catch (ua) {}
+                  }
+                }
+              })
+            } catch (ua) {
+              try {
+                e.index.reLaunch({
+                  url: "/pages/login/index"
+                })
+              } catch (u) {
+                try {
+                  e.index.navigateTo({
+                    url: "/pages/login/index"
+                  })
+                } catch (l) {}
+              }
+            }
+            return
+          }
+        } catch (ua) {}
+        F.value = a.getCurrentUser() || null;
+        const t = Pe();
+        ft(), t || (At(), Dt()), setTimeout((() => {
+          Ze.value = !0
+        }), 0), e.nextTick$1((() => {
+          aa(), it(), Zt(), ot()
+        })), e.index.onWindowResize && e.index.onWindowResize((() => {
+          aa(), it(), Zt(), ot()
+        })), Et(), Ke(), qe(), d.consumeAvatarRestoreNotice() && Se("头像文件丢失，已为你恢复为默认头像", 2e3)
+      })), e.onShow((() => {
+        Le(), F.value = a.getCurrentUser() || null, Pe(), ft(), Ke();
+        try {
+          me()
+        } catch (ua) {}
+        qe(), ot();
+        try {
+          l.scheduleTabWarmup({
+            delay: 180
+          })
+        } catch (ua) {}
+        d.consumeAvatarRestoreNotice() && Se("头像文件丢失，已为你恢复为默认头像", 2e3)
+      })), e.onHide((() => {
+        Ue(), ze(), Rt()
+      })), e.onUnmounted((() => {
+        try {
+          "function" == typeof e.index.$off && e.index.$off("tf24:mode-changed", dt)
+        } catch (ua) {}
+        if (ze(), we) {
+          try {
+            clearTimeout(we)
+          } catch (ua) {}
+          we = null
+        }
+      })), e.watch(F, (() => {
+        U.value = !1
+      })), e.watch(k, (t => {
+        const a = "pro" === t ? "pro" : "basic";
+        try {
+          v.setLastMode(a)
+        } catch (ua) {}
+        it(), "basic" === a ? (kt(), w.value = {
+          first: null,
+          operator: null
+        }, e.nextTick$1((() => ot()))) : (y.value = [], m.value = [0, 0, 0, 0], le.value = "", ne.value = "", e.nextTick$1((() => {
+          it(), Zt()
+        })), A.value = {
+          totalHeight: 0,
+          buttonHeight: 0
+        }), Rt(), qe()
+      })), e.watch(p, (() => {
+        kt(), "basic" === k.value && e.nextTick$1((() => ot()))
+      })), e.watch(I, (() => {
+        kt(), "basic" === k.value && e.nextTick$1((() => ot()))
+      })), e.watch(y, (() => Zt())), (t, a) => e.e({
+        a: e.p({
+          showBack: !1,
+          "with-safe-top": !1
+        }),
+        b: W.value && !U.value
+      }, W.value && !U.value ? {
+        c: W.value,
+        d: e.o(Fe)
+      } : {
+        e: e.t(B.value),
+        f: _.value
+      }, {
+        g: e.t(P.value),
+        h: e.o(Wt),
+        i: e.o(_t),
+        j: e.p({
+          icon: "account_circle",
+          label: "用户"
+        }),
+        k: e.o(Bt),
+        l: e.p({
+          icon: "insights",
+          label: "统计"
+        }),
+        m: e.o(Ot),
+        n: e.p({
+          icon: "settings",
+          label: "设置"
+        }),
+        o: e.t(We.value),
+        p: e.t(J.value),
+        q: e.t(V.value),
+        r: e.t(Z.value),
+        s: e.t(Be.value),
+        t: e.t(null != se.value ? e.unref(He)(se.value) : "-"),
+        v: _e.value < 12e4
+      }, _e.value < 12e4 ? {
+        w: e.t(e.unref(De)(_e.value))
+      } : {}, {
+        x: e.o(Ct),
+        y: e.f(p.value, ((t, a, u) => ({
+          a: "7066366f-4-" + u,
+          b: e.p({
+            card: t
+          }),
+          c: a,
+          d: (m.value[a] || 0) > 0 ? 1 : "",
+          e: e.o((e => Kt({
+            type: "num",
+            value: String(t.rank),
+            rank: t.rank,
+            suit: t.suit,
+            cardIndex: a
+          }, e)), a),
+          f: e.o((e => zt(e)), a),
+          g: e.o((e => Qt()), a)
+        }))),
+        z: e.f(["+", "-", "×", "÷"], ((t, a, u) => ({
+          a: e.t(t),
+          b: t,
+          c: e.o((e => Kt({
+            type: "op",
+            value: t
+          }, e)), t),
+          d: e.o((e => zt(e)), t),
+          e: e.o((e => Qt()), t)
+        }))),
+        A: e.n(rt.value),
+        B: e.f(["(", ")"], ((t, a, u) => ({
+          a: e.t(t),
+          b: t,
+          c: e.o((e => Kt({
+            type: "op",
+            value: t
+          }, e)), t),
+          d: e.o((e => zt(e)), t),
+          e: e.o((e => Qt()), t)
+        }))),
+        C: "pro" === k.value
+      }, "pro" === k.value ? {
+        D: xt.value ? 1 : "",
+        E: xt.value,
+        F: e.o(St)
+      } : {}, {
+        G: e.n(rt.value),
+        H: Qe.value.active
+      }, Qe.value.active ? {
+        I: e.t(ct.value),
+        J: e.s(ut.value)
+      } : {}, {
+        K: le.value
+      }, le.value ? {
+        L: e.t(le.value)
+      } : {}, {
+        M: e.f(y.value, ((t, a, u) => e.e({
+          a: Ge.value === a
+        }, Ge.value === a ? {
+          b: e.n(st.value)
+        } : {}, {
+          c: "num" === t.type
+        }, "num" === t.type ? {
+          d: "7066366f-5-" + u,
+          e: e.p({
+            card: {
+              rank: null != t.rank ? t.rank : Number(t.value),
+              suit: t.suit || "S",
+              value: t.value
+            },
+            size: "sm",
+            fill: !0
+          })
+        } : {
+          f: e.t(t.value)
+        }, {
+          g: e.n("num" === t.type ? "num" : "op"),
+          h: e.n({
+            "just-inserted": a === Je.value,
+            dragging: Qe.value.token && "tok" === Qe.value.token.type && Qe.value.token.index === a
+          }),
+          i: e.o((e => Kt({
+            type: "tok",
+            index: a,
+            value: t.value
+          }, e)), a),
+          j: e.o((e => zt(e)), a),
+          k: e.o((e => Qt()), a),
+          l: a
+        }))),
+        N: Ge.value === y.value.length
+      }, Ge.value === y.value.length ? {
+        O: e.n(st.value)
+      } : {}, {
+        P: "scale(" + lt.value + ")",
+        Q: Qe.value.active ? 1 : "",
+        R: 0 !== y.value.length || le.value ? "" : 1,
+        S: E.value + "px",
+        T: "pro" === k.value,
+        U: e.f([0, 2], ((t, a, u) => e.e({
+          a: b.value[t] && b.value[t].alive && "card" === b.value[t].source
+        }, b.value[t] && b.value[t].alive && "card" === b.value[t].source ? {
+          b: "7066366f-6-" + u,
+          c: e.p({
+            card: b.value[t].card,
+            size: "md"
+          })
+        } : b.value[t] && b.value[t].alive ? {
+          e: e.t(b.value[t].label)
+        } : {}, {
+          d: b.value[t] && b.value[t].alive,
+          f: e.n(gt(t)),
+          g: e.o((e => bt(t)), "basic-left-" + t),
+          h: "basic-left-" + t
+        }))),
+        V: e.f(["+", "-", "×", "÷"], ((t, a, u) => ({
+          a: e.t(t),
+          b: "basic-op-" + t,
+          c: w.value.operator === t ? 1 : "",
+          d: e.o((e => function (e) {
+            "basic" !== k.value || ve.value || (null !== w.value.first ? w.value.operator !== e ? w.value.operator = e : w.value.operator = null : Se("请先选择一个数字", {
+              interactive: !0
+            }))
+          }(t)), "basic-op-" + t)
+        }))),
+        W: e.s(R.value),
+        X: e.f([1, 3], ((t, a, u) => e.e({
+          a: b.value[t] && b.value[t].alive && "card" === b.value[t].source
+        }, b.value[t] && b.value[t].alive && "card" === b.value[t].source ? {
+          b: "7066366f-7-" + u,
+          c: e.p({
+            card: b.value[t].card,
+            size: "md"
+          })
+        } : b.value[t] && b.value[t].alive ? {
+          e: e.t(b.value[t].label)
+        } : {}, {
+          d: b.value[t] && b.value[t].alive,
+          f: e.n(gt(t)),
+          g: e.o((e => bt(t)), "basic-right-" + t),
+          h: "basic-right-" + t
+        }))),
+        Y: "pro" !== k.value,
+        Z: e.o(wt),
+        aa: e.p({
+          icon: "undo",
+          label: "撤销",
+          disabled: ht.value
+        }),
+        ab: e.o(Mt),
+        ac: e.p({
+          icon: "refresh",
+          label: "重置",
+          disabled: pt.value
+        }),
+        ad: e.o(Tt),
+        ae: e.p({
+          icon: "lightbulb",
+          label: "提示"
+        }),
+        af: e.o(Ut),
+        ag: e.p({
+          icon: "skip_next",
+          label: "下一题"
+        }),
+        ah: ae.value
+      }, (ae.value, {}), {
+        ai: ue.value
+      }, ue.value ? e.e({
+        aj: ne.value
+      }, ne.value ? {
+        ak: e.t(ne.value)
+      } : {}) : {}, {
+        al: ee.value.visible
+      }, ee.value.visible ? {
+        am: e.o(Ht),
+        an: e.s(te.value),
+        ao: e.o((() => {})),
+        ap: e.o(Rt)
+      } : {}, {
+        aq: e.unref(Me).visible
+      }, e.unref(Me).visible ? {
+        ar: e.t(e.unref(Me).text),
+        as: e.o((() => {})),
+        at: e.unref(Me).interactive ? 1 : "",
+        av: e.o(((...t) => e.unref(Te) && e.unref(Te)(...t)))
+      } : {}, {
+        aw: Ze.value ? 1 : "",
+        ax: e.s(ye.value),
+        ay: e.o(((...t) => e.unref(Re).handleTouchStart && e.unref(Re).handleTouchStart(...t))),
+        az: e.o(((...t) => e.unref(Re).handleTouchMove && e.unref(Re).handleTouchMove(...t))),
+        aA: e.o(((...t) => e.unref(Re).handleTouchEnd && e.unref(Re).handleTouchEnd(...t))),
+        aB: e.o(((...t) => e.unref(Re).handleTouchCancel && e.unref(Re).handleTouchCancel(...t)))
+      })
+    }
+  },
+  y = e._export_sfc(m, [
+    ["__scopeId", "data-v-7066366f"]
+  ]);
+wx.createPage(y);
