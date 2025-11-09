@@ -1,1 +1,156 @@
-<view class="{{['page', 'col', 'data-v-7066366f', aw && 'booted']}}" style="{{ax}}" bindtouchstart="{{ay}}" bindtouchmove="{{az}}" bindtouchend="{{aA}}" bindtouchcancel="{{aB}}"><view class="page-scroll-container data-v-7066366f"><view id="gameTopBox" class="game-header top-fixed data-v-7066366f"><app-nav-bar wx:if="{{a}}" class="data-v-7066366f" u-s="{{['title']}}" u-i="7066366f-0" bind:__l="__l" u-p="{{a}}"><view class="nav-title-stack data-v-7066366f" slot="title"><text class="nav-title-main data-v-7066366f">无敌24点程序</text></view></app-nav-bar><view class="topbar data-v-7066366f"><view class="user-chip data-v-7066366f" hover-class="user-chip-hover" bindtap="{{h}}"><block wx:if="{{b}}"><image class="user-chip-avatar data-v-7066366f" src="{{c}}" mode="aspectFill" binderror="{{d}}"/></block><view wx:else class="user-chip-fallback data-v-7066366f" style="{{'background-color:' + f}}">{{e}}</view><text class="user-chip-name data-v-7066366f">{{g}}</text></view><view class="topbar-actions data-v-7066366f"><circle-action-button wx:if="{{j}}" class="data-v-7066366f" bindtap="{{i}}" u-i="7066366f-1" bind:__l="__l" u-p="{{j}}"/><circle-action-button wx:if="{{l}}" class="data-v-7066366f" bindtap="{{k}}" u-i="7066366f-2" bind:__l="__l" u-p="{{l}}"/><circle-action-button wx:if="{{n}}" class="data-v-7066366f" bindtap="{{m}}" u-i="7066366f-3" bind:__l="__l" u-p="{{n}}"/></view></view><view id="statsRow" class="card section stats-compact-table stats-card data-v-7066366f"><view class="thead data-v-7066366f"><text class="th data-v-7066366f">剩余</text><text class="th data-v-7066366f">局数</text><text class="th ok data-v-7066366f">成功</text><text class="th fail data-v-7066366f">失败</text><text class="th data-v-7066366f">胜率</text><text class="th data-v-7066366f">上一局</text><text class="th data-v-7066366f">本局</text></view><view class="tbody data-v-7066366f"><text class="td data-v-7066366f">{{o}}</text><text class="td data-v-7066366f">{{p}}</text><text class="td ok data-v-7066366f">{{q}}</text><text class="td fail data-v-7066366f">{{r}}</text><text class="td data-v-7066366f">{{s}}%</text><text class="td data-v-7066366f">{{t}}</text><view class="td timer-cell data-v-7066366f" id="timerCell" bindtap="{{x}}"><block wx:if="{{v}}"><text class="data-v-7066366f">{{w}}</text></block><block wx:else><text class="timer-fail-text data-v-7066366f">失败</text></block></view></view></view></view><view class="game-middle data-v-7066366f"><view class="mode-panels data-v-7066366f"><view class="pro-mode mode-panel data-v-7066366f" hidden="{{!T}}"><view id="cardGrid" class="card-grid data-v-7066366f" style="padding-top:0rpx"><view wx:for="{{y}}" wx:for-item="card" wx:key="c" class="{{['playing-card', 'data-v-7066366f', card.d && 'used']}}" catchtouchstart="{{card.e}}" catchtouchmove="{{card.f}}" catchtouchend="{{card.g}}"><playing-card wx:if="{{card.b}}" class="playing-card-visual data-v-7066366f" u-i="{{card.a}}" bind:__l="__l" u-p="{{card.b}}"/></view></view><view id="opsRow1" class="{{['data-v-7066366f', 'ops-row-1', A]}}"><button wx:for="{{z}}" wx:for-item="op" wx:key="b" class="btn btn-operator data-v-7066366f" catchtouchstart="{{op.c}}" catchtouchmove="{{op.d}}" catchtouchend="{{op.e}}">{{op.a}}</button></view><view id="opsRow2" class="{{['data-v-7066366f', 'ops-row-2', G]}}"><button wx:for="{{B}}" wx:for-item="op" wx:key="b" class="btn btn-operator data-v-7066366f" catchtouchstart="{{op.c}}" catchtouchmove="{{op.d}}" catchtouchend="{{op.e}}">{{op.a}}</button><button wx:if="{{C}}" class="{{['btn', 'btn-submit-pro', 'data-v-7066366f', D && 'disabled']}}" disabled="{{E}}" bindtap="{{F}}"> 提交 </button></view><view wx:if="{{H}}" class="drag-ghost data-v-7066366f" style="{{J}}">{{I}}</view><view class="expr-card card section data-v-7066366f"><view id="exprZone" class="{{['expr-zone', 'data-v-7066366f', Q && 'expr-zone-active', R && 'empty']}}" style="{{'height:' + S}}"><view wx:if="{{K}}" class="expr-override data-v-7066366f">{{L}}</view><view id="exprRow" class="row expr-row data-v-7066366f" style="{{'transform:' + P + ';' + ('transform-origin:' + 'left center')}}"><block wx:for="{{M}}" wx:for-item="t" wx:key="l"><view wx:if="{{t.a}}" class="{{['insert-placeholder', 'data-v-7066366f', t.b]}}"></view><view class="{{['tok', 'data-v-7066366f', t.g, t.h]}}" catchtouchstart="{{t.i}}" catchtouchmove="{{t.j}}" catchtouchend="{{t.k}}"><playing-card wx:if="{{t.c}}" class="tok-card-visual data-v-7066366f" u-i="{{t.d}}" bind:__l="__l" u-p="{{t.e}}"/><text wx:else class="tok-op-text data-v-7066366f">{{t.f}}</text></view></block><view wx:if="{{N}}" class="{{['insert-placeholder', 'data-v-7066366f', O]}}"></view></view></view></view></view><view class="basic-mode mode-panel data-v-7066366f" hidden="{{!Y}}"><view class="basic-board data-v-7066366f"><view class="basic-column data-v-7066366f"><view wx:for="{{U}}" wx:for-item="i" wx:key="h" class="basic-card-wrapper data-v-7066366f"><view class="{{['data-v-7066366f', 'basic-card', i.f]}}" bindtap="{{i.g}}"><playing-card wx:if="{{i.a}}" class="basic-card-visual data-v-7066366f" u-i="{{i.b}}" bind:__l="__l" u-p="{{i.c}}"/><view wx:elif="{{i.d}}" class="basic-card-value data-v-7066366f"><text class="basic-card-value-text data-v-7066366f">{{i.e}}</text></view></view></view></view><view class="basic-ops data-v-7066366f" style="{{W}}"><button wx:for="{{V}}" wx:for-item="op" wx:key="b" class="{{['btn', 'btn-operator', 'data-v-7066366f', op.c && 'active']}}" bindtap="{{op.d}}">{{op.a}}</button></view><view class="basic-column data-v-7066366f"><view wx:for="{{X}}" wx:for-item="i" wx:key="h" class="basic-card-wrapper data-v-7066366f"><view class="{{['data-v-7066366f', 'basic-card', i.f]}}" bindtap="{{i.g}}"><playing-card wx:if="{{i.a}}" class="basic-card-visual data-v-7066366f" u-i="{{i.b}}" bind:__l="__l" u-p="{{i.c}}"/><view wx:elif="{{i.d}}" class="basic-card-value data-v-7066366f"><text class="basic-card-value-text data-v-7066366f">{{i.e}}</text></view></view></view></view></view></view></view></view><view id="gameBottomBox" class="game-footer data-v-7066366f"><view class="action-grid data-v-7066366f"><circle-action-button wx:if="{{aa}}" class="data-v-7066366f" bindtap="{{Z}}" u-i="7066366f-8" bind:__l="__l" u-p="{{aa}}"/><circle-action-button wx:if="{{ac}}" class="data-v-7066366f" bindtap="{{ab}}" u-i="7066366f-9" bind:__l="__l" u-p="{{ac}}"/><circle-action-button wx:if="{{ae}}" class="data-v-7066366f" bindtap="{{ad}}" u-i="7066366f-10" bind:__l="__l" u-p="{{ae}}"/><circle-action-button wx:if="{{ag}}" class="data-v-7066366f" bindtap="{{af}}" u-i="7066366f-11" bind:__l="__l" u-p="{{ag}}"/></view></view></view><view wx:if="{{ah}}" class="success-overlay data-v-7066366f"><view class="success-burst data-v-7066366f">24!</view></view><view wx:if="{{ai}}" class="success-overlay data-v-7066366f"><view class="error-burst data-v-7066366f"><text class="err-title data-v-7066366f">计算错误</text><text wx:if="{{aj}}" class="err-val data-v-7066366f">{{ak}}</text></view></view><view wx:if="{{al}}" class="timer-popover-layer data-v-7066366f" bindtap="{{ap}}"><view class="timer-popover data-v-7066366f" style="{{an}}" catchtap="{{ao}}"><button class="timer-popover-item data-v-7066366f" bindtap="{{am}}">重新发牌</button></view></view><view wx:if="{{aq}}" class="{{['floating-hint-layer', 'data-v-7066366f', at && 'interactive']}}" bindtap="{{av}}"><view class="floating-hint data-v-7066366f" catchtap="{{as}}">{{ar}}</view></view></view>
+<view class="{{['page', 'col', 'data-v-7066366f', aw && 'booted']}}" style="{{ax}}" bindtouchstart="{{ay}}" bindtouchmove="{{az}}" bindtouchend="{{aA}}" bindtouchcancel="{{aB}}">
+    <view class="page-scroll-container data-v-7066366f">
+        <view id="gameTopBox" class="game-header top-fixed data-v-7066366f">
+            <app-nav-bar wx:if="{{a}}" class="data-v-7066366f" u-s="{{['title']}}" u-i="7066366f-0" bind:__l="__l" u-p="{{a}}">
+                <view class="nav-title-stack data-v-7066366f" slot="title">
+                    <text class="nav-title-main data-v-7066366f">无敌24点程序</text>
+                </view>
+            </app-nav-bar>
+            <view class="topbar data-v-7066366f">
+                <view class="user-chip data-v-7066366f" hover-class="user-chip-hover" bindtap="{{h}}">
+                    <block wx:if="{{b}}">
+                        <image class="user-chip-avatar data-v-7066366f" src="{{c}}" mode="aspectFill" binderror="{{d}}" />
+                    </block>
+                    <view wx:else class="user-chip-fallback data-v-7066366f" style="{{'background-color:' + f}}">
+                        {{e}}
+                    </view>
+                    <text class="user-chip-name data-v-7066366f">{{g}}</text>
+                </view>
+                <view class="topbar-actions data-v-7066366f">
+                    <circle-action-button wx:if="{{j}}" class="data-v-7066366f" bindtap="{{i}}" u-i="7066366f-1" bind:__l="__l" u-p="{{j}}" />
+                    <circle-action-button wx:if="{{l}}" class="data-v-7066366f" bindtap="{{k}}" u-i="7066366f-2" bind:__l="__l" u-p="{{l}}" />
+                    <circle-action-button wx:if="{{n}}" class="data-v-7066366f" bindtap="{{m}}" u-i="7066366f-3" bind:__l="__l" u-p="{{n}}" />
+                </view>
+            </view>
+            <view id="statsRow" class="card section stats-compact-table stats-card data-v-7066366f">
+                <view class="thead data-v-7066366f">
+                    <text class="th data-v-7066366f">剩余</text>
+                    <text class="th data-v-7066366f">局数</text>
+                    <text class="th ok data-v-7066366f">成功</text>
+                    <text class="th fail data-v-7066366f">失败</text>
+                    <text class="th data-v-7066366f">胜率</text>
+                    <text class="th data-v-7066366f">上一局</text>
+                    <text class="th data-v-7066366f">本局</text>
+                </view>
+                <view class="tbody data-v-7066366f">
+                    <text class="td data-v-7066366f">{{o}}</text>
+                    <text class="td data-v-7066366f">{{p}}</text>
+                    <text class="td ok data-v-7066366f">{{q}}</text>
+                    <text class="td fail data-v-7066366f">{{r}}</text>
+                    <text class="td data-v-7066366f">{{s}}%</text>
+                    <text class="td data-v-7066366f">{{t}}</text>
+                    <view class="td timer-cell data-v-7066366f" id="timerCell" bindtap="{{x}}">
+                        <block wx:if="{{v}}">
+                            <text class="data-v-7066366f">{{w}}</text>
+                        </block>
+                        <block wx:else>
+                            <text class="timer-fail-text data-v-7066366f">失败</text>
+                        </block>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="game-middle data-v-7066366f">
+            <view class="mode-panels data-v-7066366f">
+                <view class="pro-mode mode-panel data-v-7066366f" wx:if="{{T}}">
+                    <view id="cardGrid" class="card-grid data-v-7066366f" style="padding-top:0rpx">
+                        <view wx:for="{{y}}" wx:for-item="card" wx:key="c" class="{{['playing-card', 'data-v-7066366f', card.d && 'used']}}" catchtouchstart="{{card.e}}" catchtouchmove="{{card.f}}" catchtouchend="{{card.g}}">
+                            <playing-card wx:if="{{card.b}}" class="playing-card-visual data-v-7066366f" u-i="{{card.a}}" bind:__l="__l" u-p="{{card.b}}" />
+                        </view>
+                    </view>
+                    <view id="opsRow1" class="{{['data-v-7066366f', 'ops-row-1', A]}}">
+                        <button wx:for="{{z}}" wx:for-item="op" wx:key="b" class="btn btn-operator data-v-7066366f" catchtouchstart="{{op.c}}" catchtouchmove="{{op.d}}" catchtouchend="{{op.e}}">
+                            {{op.a}}
+                        </button>
+                    </view>
+                    <view id="opsRow2" class="{{['data-v-7066366f', 'ops-row-2', G]}}">
+                        <button wx:for="{{B}}" wx:for-item="op" wx:key="b" class="btn btn-operator data-v-7066366f" catchtouchstart="{{op.c}}" catchtouchmove="{{op.d}}" catchtouchend="{{op.e}}">
+                            {{op.a}}
+                        </button>
+                        <button wx:if="{{C}}" class="{{['btn', 'btn-submit-pro', 'data-v-7066366f', D && 'disabled']}}" disabled="{{E}}" bindtap="{{F}}">
+                            提交
+                        </button>
+                    </view>
+                    <view wx:if="{{H}}" class="drag-ghost data-v-7066366f" style="{{J}}">
+                        {{I}}
+                    </view>
+                    <view class="expr-card card section data-v-7066366f">
+                        <view id="exprZone" class="{{['expr-zone', 'data-v-7066366f', Q && 'expr-zone-active', R && 'empty']}}" style="{{'height:' + S}}">
+                            <view wx:if="{{K}}" class="expr-override data-v-7066366f">{{L}}</view>
+                            <view id="exprRow" class="row expr-row data-v-7066366f" style="{{'transform:' + P + ';' + ('transform-origin:' + 'left center')}}">
+                                <block wx:for="{{M}}" wx:for-item="t" wx:key="l">
+                                    <view wx:if="{{t.a}}" class="{{['insert-placeholder', 'data-v-7066366f', t.b]}}"></view>
+                                    <view class="{{['tok', 'data-v-7066366f', t.g, t.h]}}" catchtouchstart="{{t.i}}" catchtouchmove="{{t.j}}" catchtouchend="{{t.k}}">
+                                        <playing-card wx:if="{{t.c}}" class="tok-card-visual data-v-7066366f" u-i="{{t.d}}" bind:__l="__l" u-p="{{t.e}}" />
+                                        <text wx:else class="tok-op-text data-v-7066366f">
+                                            {{t.f}}
+                                        </text>
+                                    </view>
+                                </block>
+                                <view wx:if="{{N}}" class="{{['insert-placeholder', 'data-v-7066366f', O]}}"></view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="basic-mode mode-panel data-v-7066366f" wx:elif="{{Y}}">
+                    <view class="basic-board data-v-7066366f">
+                        <view class="basic-column data-v-7066366f">
+                            <view wx:for="{{U}}" wx:for-item="i" wx:key="h" class="basic-card-wrapper data-v-7066366f">
+                                <view class="{{['data-v-7066366f', 'basic-card', i.f]}}" bindtap="{{i.g}}">
+                                    <playing-card wx:if="{{i.a}}" class="basic-card-visual data-v-7066366f" u-i="{{i.b}}" bind:__l="__l" u-p="{{i.c}}" />
+                                    <view wx:elif="{{i.d}}" class="basic-card-value data-v-7066366f">
+                                        <text class="basic-card-value-text data-v-7066366f">
+                                            {{i.e}}
+                                        </text>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                        <view class="basic-ops data-v-7066366f" style="{{W}}">
+                            <button wx:for="{{V}}" wx:for-item="op" wx:key="b" class="{{['btn', 'btn-operator', 'data-v-7066366f', op.c && 'active']}}" bindtap="{{op.d}}">
+                                {{op.a}}
+                            </button>
+                        </view>
+                        <view class="basic-column data-v-7066366f">
+                            <view wx:for="{{X}}" wx:for-item="i" wx:key="h" class="basic-card-wrapper data-v-7066366f">
+                                <view class="{{['data-v-7066366f', 'basic-card', i.f]}}" bindtap="{{i.g}}">
+                                    <playing-card wx:if="{{i.a}}" class="basic-card-visual data-v-7066366f" u-i="{{i.b}}" bind:__l="__l" u-p="{{i.c}}" />
+                                    <view wx:elif="{{i.d}}" class="basic-card-value data-v-7066366f">
+                                        <text class="basic-card-value-text data-v-7066366f">
+                                            {{i.e}}
+                                        </text>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view id="gameBottomBox" class="game-footer data-v-7066366f">
+            <view class="action-grid data-v-7066366f">
+                <circle-action-button wx:if="{{aa}}" class="data-v-7066366f" bindtap="{{Z}}" u-i="7066366f-8" bind:__l="__l" u-p="{{aa}}" />
+                <circle-action-button wx:if="{{ac}}" class="data-v-7066366f" bindtap="{{ab}}" u-i="7066366f-9" bind:__l="__l" u-p="{{ac}}" />
+                <circle-action-button wx:if="{{ae}}" class="data-v-7066366f" bindtap="{{ad}}" u-i="7066366f-10" bind:__l="__l" u-p="{{ae}}" />
+                <circle-action-button wx:if="{{ag}}" class="data-v-7066366f" bindtap="{{af}}" u-i="7066366f-11" bind:__l="__l" u-p="{{ag}}" />
+            </view>
+        </view>
+    </view>
+    <view wx:if="{{ah}}" class="success-overlay data-v-7066366f">
+        <view class="success-burst data-v-7066366f">24!</view>
+    </view>
+    <view wx:if="{{ai}}" class="success-overlay data-v-7066366f">
+        <view class="error-burst data-v-7066366f">
+            <text class="err-title data-v-7066366f">计算错误</text>
+            <text wx:if="{{aj}}" class="err-val data-v-7066366f">{{ak}}</text>
+        </view>
+    </view>
+    <view wx:if="{{al}}" class="timer-popover-layer data-v-7066366f" bindtap="{{ap}}">
+        <view class="timer-popover data-v-7066366f" style="{{an}}" catchtap="{{ao}}">
+            <button class="timer-popover-item data-v-7066366f" bindtap="{{am}}">重新发牌</button>
+        </view>
+    </view>
+    <view wx:if="{{aq}}" class="{{['floating-hint-layer', 'data-v-7066366f', at && 'interactive']}}" bindtap="{{av}}">
+        <view class="floating-hint data-v-7066366f" catchtap="{{as}}">{{ar}}</view>
+    </view>
+</view>
