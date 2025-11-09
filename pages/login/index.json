@@ -3,5 +3,7 @@
   "enablePullDownRefresh": false,
   "usingComponents": {
     "app-nav-bar": "../../components/AppNavBar"
-  }
+  },
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
 }

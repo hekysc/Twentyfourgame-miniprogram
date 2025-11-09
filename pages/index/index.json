@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "无敌24点程序·观测",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true,
   "usingComponents": {
     "app-nav-bar": "../../components/AppNavBar",
     "circle-action-button": "../../components/CircleActionButton",

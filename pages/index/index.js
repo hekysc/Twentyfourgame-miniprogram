@@ -12,7 +12,8 @@ const e = require("../../common/vendor.js"),
   s = require("../../utils/edge-exit.js"),
   v = require("../../utils/prefs.js"),
   d = require("../../utils/avatar.js"),
-  f = require("../../utils/navigation.js");
+  f = require("../../utils/navigation.js"),
+  share = require("../../utils/share.js");
 Math || (h + p + x)();
 const h = () => "../../components/AppNavBar.js",
   p = () => "../../components/CircleActionButton.js",
@@ -36,6 +37,11 @@ const h = () => "../../components/AppNavBar.js",
         x = e.ref(null),
         m = e.ref([0, 0, 0, 0]),
         y = e.ref([]);
+      const shareConfig = {
+        title: "秒算24点，等你来挑战",
+        path: "/pages/index/index"
+      };
+      share.enablePageShare(e, shareConfig);
       let g = "basic";
       try {
         const e = v.getLastMode();

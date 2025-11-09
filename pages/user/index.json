@@ -2,5 +2,7 @@
   "navigationBarTitleText": "用户管理",
   "usingComponents": {
     "app-nav-bar": "../../components/AppNavBar"
-  }
+  },
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
 }

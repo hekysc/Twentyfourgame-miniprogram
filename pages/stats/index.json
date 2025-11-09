@@ -4,5 +4,7 @@
   "usingComponents": {
     "mini-bar": "../../components/MiniBar",
     "app-nav-bar": "../../components/AppNavBar"
-  }
+  },
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
 }
