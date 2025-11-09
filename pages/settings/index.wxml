@@ -1,0 +1,51 @@
+<view class="settings-page data-v-a9431275">
+    <app-nav-bar wx:if="{{a}}" class="data-v-a9431275" u-i="a9431275-0" bind:__l="__l" u-p="{{a}}" />
+    <view class="settings-body data-v-a9431275" style="{{q}}">
+        <view class="section data-v-a9431275">
+            <view class="section-title data-v-a9431275">默认模式</view>
+            <radio-group class="radio-group data-v-a9431275" bindchange="{{c}}" value="{{d}}">
+                <label wx:for="{{b}}" wx:for-item="item" wx:key="d" class="radio-item data-v-a9431275">
+                    <radio class="data-v-a9431275" value="{{item.a}}" checked="{{item.b}}" />
+                    <text class="radio-label data-v-a9431275">{{item.c}}</text>
+                </label>
+            </radio-group>
+            <view class="section-tip data-v-a9431275">切换后返回题目页时会自动应用</view>
+        </view>
+        <view class="section data-v-a9431275">
+            <view class="section-title data-v-a9431275">JQK 数值</view>
+            <radio-group class="radio-group data-v-a9431275" bindchange="{{f}}" value="{{g}}">
+                <label wx:for="{{e}}" wx:for-item="item" wx:key="d" class="radio-item data-v-a9431275">
+                    <radio class="data-v-a9431275" value="{{item.a}}" checked="{{item.b}}" />
+                    <text class="radio-label data-v-a9431275">{{item.c}}</text>
+                </label>
+            </radio-group>
+            <view class="section-tip data-v-a9431275">仅可选择两套固定规则。</view>
+        </view>
+        <view class="section data-v-a9431275">
+            <view class="section-title data-v-a9431275">题库来源</view>
+            <radio-group class="radio-group data-v-a9431275" bindchange="{{i}}" value="{{j}}">
+                <label wx:for="{{h}}" wx:for-item="item" wx:key="d" class="radio-item data-v-a9431275">
+                    <radio class="data-v-a9431275" value="{{item.a}}" checked="{{item.b}}" />
+                    <text class="radio-label data-v-a9431275">{{item.c}}</text>
+                </label>
+            </radio-group>
+            <view wx:if="{{k}}" class="mix-weight data-v-a9431275">
+                <view class="mix-label data-v-a9431275">错题权重 {{l}}%</view>
+                <slider class="data-v-a9431275" value="{{m}}" min="0" max="100" step="1" bindchange="{{n}}" active-color="#2563eb" background-color="#e2e8f0" />
+            </view>
+        </view>
+        <view class="section data-v-a9431275" style="display:none">
+            <view class="section-title data-v-a9431275">其他偏好</view>
+            <view wx:for="{{o}}" wx:for-item="toggle" wx:key="e" class="toggle-item data-v-a9431275">
+                <view class="toggle-texts data-v-a9431275">
+                    <text class="toggle-title data-v-a9431275">{{toggle.a}}</text>
+                    <text class="toggle-desc data-v-a9431275">{{toggle.b}}</text>
+                </view>
+                <switch class="data-v-a9431275" checked="{{toggle.c}}" bindchange="{{toggle.d}}" color="#2563eb" />
+            </view>
+        </view>
+        <view class="section data-v-a9431275">
+            <button class="clear-cache data-v-a9431275" bindtap="{{p}}">清理缓存</button>
+        </view>
+    </view>
+</view>
