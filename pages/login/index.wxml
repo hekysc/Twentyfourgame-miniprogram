@@ -1,1 +1,19 @@
-<view class="login-page data-v-483539cc" style="{{n}}" bindtouchstart="{{o}}" bindtouchmove="{{p}}" bindtouchend="{{q}}" bindtouchcancel="{{r}}"><app-nav-bar wx:if="{{a}}" class="data-v-483539cc" u-i="483539cc-0" bind:__l="__l" u-p="{{a}}"/><view class="login-body data-v-483539cc"><view class="login-heading data-v-483539cc"><text class="h1 data-v-483539cc">选择玩家</text></view><view wx:if="{{b}}" class="error-card card section data-v-483539cc"><text class="err-title data-v-483539cc">数据异常</text><text class="err-text data-v-483539cc">{{c}}</text><button class="btn danger data-v-483539cc" bindtap="{{d}}">重置数据</button></view><view wx:elif="{{e}}" class="empty-card card section data-v-483539cc"><text class="empty-ill data-v-483539cc">🃏</text><text class="empty-text data-v-483539cc">还没有玩家，快创建一个吧！</text><button class="create-btn highlight data-v-483539cc" bindtap="{{f}}"><text class="create-plus data-v-483539cc">＋</text><text class="data-v-483539cc">新建玩家</text></button></view><view wx:else class="user-list data-v-483539cc"><button wx:for="{{g}}" wx:for-item="u" wx:key="g" class="user-item card section data-v-483539cc" bindtap="{{u.h}}"><image wx:if="{{u.a}}" class="avatar-img data-v-483539cc" src="{{u.b}}" mode="aspectFill"/><view wx:else class="avatar data-v-483539cc" style="{{'background-color:' + u.d}}">{{u.c}}</view><view class="user-col data-v-483539cc"><view class="user-name data-v-483539cc">{{u.e}}</view><view class="user-sub data-v-483539cc">最近：{{u.f}}</view></view><text class="chev data-v-483539cc">›</text></button><button class="create-btn data-v-483539cc" bindtap="{{h}}"><text class="create-plus data-v-483539cc">＋</text><text class="data-v-483539cc">新建玩家</text></button></view></view><view wx:if="{{i}}" class="{{['floating-hint-layer', 'data-v-483539cc', l && 'interactive']}}" bindtap="{{m}}"><view class="floating-hint data-v-483539cc" catchtap="{{k}}">{{j}}</view></view></view>
+<view class="login-page data-v-483539cc" style="{{n}}" bindtouchstart="{{o}}" bindtouchmove="{{p}}" bindtouchend="{{q}}" bindtouchcancel="{{r}}">
+  <app-nav-bar wx:if="{{a}}" class="data-v-483539cc" u-i="483539cc-0" bind:__l="__l" u-p="{{a}}" />
+  <view class="login-body data-v-483539cc">
+    <view class="login-heading data-v-483539cc"><text class="h1 data-v-483539cc">选择玩家</text></view>
+    <view wx:if="{{b}}" class="error-card card section data-v-483539cc"><text class="err-title data-v-483539cc">数据异常</text><text class="err-text data-v-483539cc">{{c}}</text><button class="btn danger data-v-483539cc" bindtap="{{d}}">重置数据</button></view>
+    <view wx:elif="{{e}}" class="empty-card card section data-v-483539cc"><text class="empty-ill data-v-483539cc">🃏</text><text class="empty-text data-v-483539cc">还没有玩家，快创建一个吧！</text><button class="create-btn highlight data-v-483539cc" bindtap="{{f}}"><text class="create-plus data-v-483539cc">＋</text><text class="data-v-483539cc">新建玩家</text></button></view>
+    <view wx:else class="user-list data-v-483539cc"><button wx:for="{{g}}" wx:for-item="u" wx:key="g" class="user-item card section data-v-483539cc" bindtap="{{u.h}}">
+        <image wx:if="{{u.a}}" class="avatar-img data-v-483539cc" src="{{u.b}}" mode="aspectFill" />
+        <view wx:else class="avatar data-v-483539cc" style="{{'background-color:' + u.d}}">{{u.c}}</view>
+        <view class="user-col data-v-483539cc">
+          <view class="user-name data-v-483539cc">{{u.e}}</view>
+          <view class="user-sub data-v-483539cc">最近：{{u.f}}</view>
+        </view><text class="chev data-v-483539cc">›</text>
+      </button><button class="create-btn data-v-483539cc" bindtap="{{h}}"><text class="create-plus data-v-483539cc">＋</text><text class="data-v-483539cc">新建玩家</text></button></view>
+  </view>
+  <view wx:if="{{i}}" class="{{['floating-hint-layer', 'data-v-483539cc', l && 'interactive']}}" bindtap="{{m}}">
+    <view class="floating-hint data-v-483539cc" catchtap="{{k}}">{{j}}</view>
+  </view>
+</view>
