@@ -1136,7 +1136,12 @@ const h = () => "../../components/AppNavBar.js",
         }
       }
 
+      let isUtExecuting = false;
+      
       function Ut() {
+        if (isUtExecuting) return;
+        isUtExecuting = true;
+        
         if (!L.value) {
           L.value = !0, J.value += 1, Z.value += 1;
           try {
@@ -1167,7 +1172,12 @@ const h = () => "../../components/AppNavBar.js",
             })
           } catch (ua) {}
         }
-        Dt()
+        Dt();
+        
+        // Reset execution flag after all operations are complete
+        setTimeout(() => {
+          isUtExecuting = false;
+        }, 100);
       }
 
       function Pt() {
