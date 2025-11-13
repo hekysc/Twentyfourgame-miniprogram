@@ -1,1 +1,12 @@
-<view class="page data-v-d26a070b" style="{{k}}" bindtouchstart="{{l}}" bindtouchmove="{{m}}" bindtouchend="{{n}}" bindtouchcancel="{{o}}"><app-nav-bar wx:if="{{a}}" class="data-v-d26a070b" u-i="d26a070b-0" bind:__l="__l" u-p="{{a}}"/><view class="row data-v-d26a070b" style="gap:12rpx;align-items:center"><input placeholder="新用户名称" class="input data-v-d26a070b" value="{{b}}" bindinput="{{c}}"/><button class="btn btn-primary data-v-d26a070b" bindtap="{{d}}">添加</button></view><view class="list data-v-d26a070b"><view wx:for="{{e}}" wx:for-item="u" wx:key="j" class="{{['item', 'card', 'section', 'data-v-d26a070b', u.k && 'active']}}"><view class="user-left data-v-d26a070b" bindtap="{{u.f}}"><image wx:if="{{u.a}}" class="avatar-img data-v-d26a070b" src="{{u.b}}" mode="aspectFill"/><view wx:else class="avatar data-v-d26a070b" style="{{'background-color:' + u.d}}">{{u.c}}</view><view class="name data-v-d26a070b">{{u.e}}</view></view><view class="ops data-v-d26a070b"><button class="mini data-v-d26a070b" bindtap="{{u.g}}">改名</button><button class="mini data-v-d26a070b" bindtap="{{u.h}}">头像</button><button class="mini danger data-v-d26a070b" bindtap="{{u.i}}">删除</button></view></view></view><view wx:if="{{f}}" class="{{['floating-hint-layer', 'data-v-d26a070b', i && 'interactive']}}" bindtap="{{j}}"><view class="floating-hint data-v-d26a070b" catchtap="{{h}}">{{g}}</view></view></view>
+<view class="page" style="{{ f }}">
+  <app-nav-bar u-i="d26a070b-0" bind:__l="__l" u-p="{{ a }}"></app-nav-bar>
+
+  <view class="user-card card section" wx:if="{{ b }}">
+    <image class="avatar-img" src="{{ c }}" mode="aspectFill"></image>
+    <view class="nickname">{{ d }}</view>
+  </view>
+
+  <view class="actions">
+    <button class="btn danger" bindtap="{{ e }}">退出登录</button>
+  </view>
+</view>

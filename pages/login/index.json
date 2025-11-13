@@ -1,9 +1,5 @@
 {
   "navigationBarTitleText": "登录",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "app-nav-bar": "../../components/AppNavBar"
-  },
-  "enableShareAppMessage": true,
-  "enableShareTimeline": true
+  "navigationStyle": "default",
+  "enablePullDownRefresh": false
 }

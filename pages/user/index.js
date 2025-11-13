@@ -1,1 +1,77 @@
-"use strict";const e=require("../../common/vendor.js"),t=require("../../utils/store.js"),a=require("../../utils/hints.js"),r=require("../../utils/edge-exit.js"),n=require("../../utils/avatar.js"),i=require("../../utils/navigation.js"),o=require("../../utils/useSafeArea.js"),s=require("../../utils/tab-cache.js"),share=require("../../utils/share.js");Math||c();const c=()=>"../../components/AppNavBar.js",u={__name:"index",setup(c){const u=e.ref({list:[],currentId:""}),d=e.ref(""),{hintState:l,showHint:h,hideHint:f}=a.useFloatingHint(),v=r.useEdgeExit({showHint:h,onExit:()=>{i.navigateToHome()}});e.onBackPress((()=>(i.navigateToHome(),!0)));const{safeTop:m,safeBottom:p}=o.useSafeArea(),x=o.rpxToPx(24)||12,g=e.computed((()=>{const e=Math.max(0,m.value||0),t=Math.max(0,p.value||0);return{paddingTop:`${e+x}px`,paddingLeft:`${x}px`,paddingRight:`${x}px`,paddingBottom:`${x+t}px`,display:"flex",flexDirection:"column",rowGap:"16rpx",backgroundColor:"#f8fafc",boxSizing:"border-box",minHeight:"calc(var(--vh, 1vh) * 100)"}}));share.enablePageShare(e);function T(){const e=s.getCachedUsersState();if(e&&Array.isArray(e.list))return void(u.value=e);const a=t.getUsers();u.value=a,s.setCachedUsersState(a)}const y=e.computed((()=>(u.value.list||[]).filter((e=>"Guest"!==String(e.name||"")))));function b(){t.addUser(d.value.trim()||void 0),d.value="",T();try{s.scheduleTabWarmup({delay:200})}catch(e){}}function U(e){if(!e)return"U";const t=String(e).trim();return t.length?t[0].toUpperCase():"U"}return e.onMounted((()=>{try{e.index.hideTabBar&&e.index.hideTabBar()}catch(a){}t.ensureInit(),T()})),e.onShow((()=>{T(),n.consumeAvatarRestoreNotice()&&h("头像文件丢失，已为你恢复为默认头像",2e3)})),(a,r)=>e.e({a:e.p({title:"用户管理","show-back":!0,"with-safe-top":!1,"back-to-index":!0}),b:d.value,c:e.o((e=>d.value=e.detail.value)),d:e.o(b),e:e.f(y.value,((a,r,i)=>e.e({a:a.avatar},a.avatar?{b:a.avatar}:{c:e.t(U(a.name)),d:a.color||"#e2e8f0"},{e:e.t(a.name),f:e.o((r=>function(a){t.switchUser(a),T();try{s.scheduleTabWarmup({delay:200})}catch(r){}try{e.index.reLaunch({url:"/pages/index/index"})}catch(r){try{e.index.navigateTo({url:"/pages/index/index"})}catch(n){}}}(a.id)),a.id),g:e.o((r=>function(a){e.index.showModal({title:"改名",editable:!0,placeholderText:a.name,success(e){if(e.confirm){t.renameUser(a.id,e.content||a.name),T();try{s.scheduleTabWarmup({delay:200})}catch(r){}}}})}(a)),a.id),h:e.o((t=>function(t){if(t&&t.id)try{e.index.showActionSheet({itemList:["从相册选择","移除头像","取消"],success(a){const r=a.tapIndex;if(0===r)try{e.index.chooseImage({count:1,sizeType:["compressed"],success(e){const a=e.tempFilePaths&&e.tempFilePaths[0]||"",r=e.tempFiles&&e.tempFiles[0]&&e.tempFiles[0].size||0;a?n.saveAvatarForUser(t.id,a,{size:r}).then((e=>{e&&e.ok?h("头像已更新",1200):h("头像保存失败，请重试",1800),T();try{s.scheduleTabWarmup({delay:240})}catch(t){}})):h("未选择有效头像",1500)},fail(){h("头像选择已取消",1200)}})}catch(i){}else 1===r&&n.removeAvatarForUser(t.id).then((()=>{h("已恢复默认头像",1500),T();try{s.scheduleTabWarmup({delay:240})}catch(i){}})).catch((()=>{h("头像清除失败，请重试",1800)}))}})}catch(a){}}(a)),a.id),i:e.o((r=>{return i=a.id,void e.index.showModal({title:"删除用户",content:"确定删除该用户？",success(e){e.confirm&&n.removeAvatarForUser(i).finally((()=>{t.removeUser(i),T();try{s.scheduleTabWarmup({delay:200})}catch(e){}}))}});var i}),a.id),j:a.id,k:a.id===u.value.currentId?1:""}))),f:e.unref(l).visible},e.unref(l).visible?{g:e.t(e.unref(l).text),h:e.o((()=>{})),i:e.unref(l).interactive?1:"",j:e.o(((...t)=>e.unref(f)&&e.unref(f)(...t)))}:{},{k:e.s(g.value),l:e.o(((...t)=>e.unref(v).handleTouchStart&&e.unref(v).handleTouchStart(...t))),m:e.o(((...t)=>e.unref(v).handleTouchMove&&e.unref(v).handleTouchMove(...t))),n:e.o(((...t)=>e.unref(v).handleTouchEnd&&e.unref(v).handleTouchEnd(...t))),o:e.o(((...t)=>e.unref(v).handleTouchCancel&&e.unref(v).handleTouchCancel(...t)))})}},d=e._export_sfc(u,[["__scopeId","data-v-d26a070b"]]);wx.createPage(d);
+"use strict";
+const e = require("../../common/vendor.js"),
+  o = require("../../utils/useSafeArea.js"),
+  u = require("../../utils/navigation.js");
+
+const d = {
+  __name: "index",
+  setup(c) {
+    const {
+      safeTop: v,
+      safeBottom: d
+    } = o.useSafeArea(),
+    f = o.rpxToPx(24) || 12,
+    p = e.ref(null), // For user info
+    g = e.computed((() => {
+      const e = Math.max(0, v.value || 0),
+        t = Math.max(0, d.value || 0);
+      return {
+        paddingTop: `${e + f}px`,
+        paddingLeft: `${f}px`,
+        paddingRight: `${f}px`,
+        paddingBottom: `${f + t}px`,
+        minHeight: "100vh",
+        boxSizing: "border-box"
+      }
+    }));
+
+    // Logout function
+    function logout() {
+      wx.showModal({
+        title: '提示',
+        content: '确定要退出登录吗？',
+        success(res) {
+          if (res.confirm) {
+            const app = getApp();
+            app.globalData.userInfo = null;
+            app.globalData.isLoggedIn = false;
+
+            wx.reLaunch({
+              url: '/pages/login/index',
+            });
+          }
+        }
+      });
+    }
+
+    e.onShow((() => {
+      const app = getApp();
+      if (!app.globalData.isLoggedIn || !app.globalData.userInfo) {
+        wx.reLaunch({
+          url: '/pages/login/index'
+        });
+      } else {
+        p.value = app.globalData.userInfo;
+      }
+    }));
+
+    return (t, a) => e.e({
+      a: e.p({
+        title: "个人中心",
+        "show-back": !0,
+        "with-safe-top": !1,
+        "back-to-index": !0
+      }),
+      b: p.value
+    }, p.value ? {
+      c: p.value.avatarUrl,
+      d: e.t(p.value.nickName)
+    } : {}, {
+      e: e.o(logout),
+      f: e.s(g.value)
+    })
+  }
+};
+
+const f = e._export_sfc(d);
+wx.createPage(f);

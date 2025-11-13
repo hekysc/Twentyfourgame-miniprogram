@@ -1,17 +1,15 @@
 "use strict";
+// 删除了 a = require("../../utils/store.js") 和 d = require("../../utils/avatar.js")
 const e = require("../../common/vendor.js"),
   t = require("../../utils/solver.js"),
-  a = require("../../utils/store.js"),
   u = require("../../utils/useSafeArea.js"),
   l = require("../../utils/tab-cache.js"),
   n = require("../../utils/calc.js"),
   r = require("../../core/basic-mode.js"),
   i = require("../../core/game-engine.js"),
-  o = require("../../utils/mistakes.js"),
   c = require("../../utils/hints.js"),
   s = require("../../utils/edge-exit.js"),
   v = require("../../utils/prefs.js"),
-  d = require("../../utils/avatar.js"),
   f = require("../../utils/navigation.js"),
   share = require("../../utils/share.js");
 Math || (h + p + x)();
@@ -110,15 +108,15 @@ const h = () => "../../components/AppNavBar.js",
         E = e.ref("pro" === g ? 80 : 70),
         F = e.ref(null),
         U = e.ref(!1),
-        P = e.computed((() => (F.value && "string" == typeof F.value.name ? F.value.name.trim() : "") || "未登录")),
-        W = e.computed((() => F.value && F.value.avatar ? F.value.avatar : "")),
+        P = e.computed((() => (F.value && F.value.nickName ? F.value.nickName.trim() : "") || "未登录")),
+        W = e.computed((() => F.value && F.value.avatarUrl ? F.value.avatarUrl : "")),
         B = e.computed((() => function (e) {
           if (!e) return "U";
           const t = String(e).trim();
           return t.length ? t[0].toUpperCase() : "U"
         }(P.value))),
         _ = e.computed((() => function (e) {
-          const t = String((null == e ? void 0 : e.id) || (null == e ? void 0 : e.name) || "");
+          const t = String((null == e ? void 0 : e._id) || (null == e ? void 0 : e.nickName) || "");
           if (!t) return "#e2e8f0";
           let a = 0;
           for (let l = 0; l < t.length; l++) a = 33 * a + t.charCodeAt(l) >>> 0;
@@ -212,7 +210,8 @@ const h = () => "../../components/AppNavBar.js",
       }
 
       function Ne(e) {
-        return "mistakes" === e || "mix" === e ? e : "mistake" === e ? "mistakes" : "regular"
+        // 简化：暂时只支持 regular 模式
+        return "regular";
       }
 
       function je(e) {
@@ -296,10 +295,9 @@ const h = () => "../../components/AppNavBar.js",
       }
 
       function Ue() {
+        // 保留本地UI状态存储，但不存储核心游戏数据
         try {
           const t = {
-            deck: O.value || [],
-            cards: p.value || [],
             tokens: (y.value || []).map((e => ({
               type: e.type,
               value: e.value,
@@ -307,92 +305,20 @@ const h = () => "../../components/AppNavBar.js",
               suit: e.suit
             }))),
             usedByCard: m.value || [],
-            faceUseHigh: !!I.value,
-            rankMode: H.value.rankMode,
-            handRecorded: !!L.value,
-            timeoutRecorded: !!q.value,
-            handStartTs: re.value || 0,
-            hintWasUsed: !!oe.value,
-            attemptCount: ce.value || 0,
-            handsPlayed: J.value || 0,
-            successCount: V.value || 0,
-            failCount: Z.value || 0,
-            handFailedOnce: !!fe.value,
-            solution: x.value || null,
-            deckSource: K.value || "regular",
-            mixWeight: z.value,
-            haptics: N.value,
-            sfx: j.value,
-            reducedMotion: $.value,
-            mistakeRunUsed: Array.from(Q.value || []),
-            mistakeRunStamp: X.value || 0,
-            currentHandSource: Y.value || "regular",
-            currentMistakeKey: G.value || "",
             mode: k.value || "basic"
           };
-          e.index.setStorageSync("tf24_game_session_v1", JSON.stringify(t))
+          e.index.setStorageSync("tf24_ui_session_v1", JSON.stringify(t))
         } catch (ua) {}
       }
 
       function Pe() {
-        try {
-          const a = e.index.getStorageSync("tf24_game_session_v1");
-          if (!a) return !1;
-          const u = "string" == typeof a ? JSON.parse(a) : a;
-          if (!u || !Array.isArray(u.deck) || !Array.isArray(u.cards)) return !1;
-          if (4 === (u.cards || []).length) {
-            const a = "pro" === u.mode ? "pro" : "basic";
-            let l = null;
-            try {
-              l = v.getLastMode ? v.getLastMode() : null
-            } catch (ua) {
-              l = null
-            }
-            if (l && l !== a) return vt(l), Rt(), !1;
-            O.value = u.deck, p.value = u.cards, kt(), y.value = Array.isArray(u.tokens) ? u.tokens : [], m.value = Array.isArray(u.usedByCard) ? u.usedByCard : [0, 0, 0, 0];
-            const r = $e({
-              rankMode: Ie(u.rankMode || (u.faceUseHigh ? "jqk-11-12-13" : "jqk-1")),
-              deckSource: u.deckSource,
-              mixWeight: u.mixWeight,
-              haptics: u.haptics,
-              sfx: u.sfx,
-              reducedMotion: u.reducedMotion
-            });
-            if (H.value = {
-                ...r
-              }, D.value = {
-                ...D.value,
-                ...r
-              }, I.value = "jqk-11-12-13" === r.rankMode, K.value = r.deckSource, z.value = r.mixWeight, N.value = r.haptics, j.value = r.sfx, $.value = r.reducedMotion, L.value = !!u.handRecorded, q.value = !!u.timeoutRecorded, re.value = u.handStartTs || Date.now(), oe.value = !!u.hintWasUsed, ce.value = u.attemptCount || 0, J.value = u.handsPlayed || 0, V.value = u.successCount || 0, Z.value = u.failCount || 0, fe.value = !!u.handFailedOnce, x.value = u.solution || null, Q.value = new Set(Array.isArray(u.mistakeRunUsed) ? u.mistakeRunUsed : []), X.value = u.mistakeRunStamp || 0, Y.value = "mistake" === u.currentHandSource ? "mistake" : "regular", G.value = "string" == typeof u.currentMistakeKey ? u.currentMistakeKey : "", k.value = a, Rt(), !x.value) try {
-              const e = (p.value || []).map((e => n.mapCardRank(e.rank, I.value)));
-              x.value = 4 === e.length ? t.solve24(e) : null
-            } catch (ua) {
-              x.value = null
-            }
-            return e.nextTick$1((() => {
-              aa(), it(), Zt()
-            })), !0
-          }
-          return !1
-        } catch (ua) {
-          return !1
-        }
+        return !1; // 禁用会话恢复
       }
       const We = e.computed((() => {
-          if ("mistakes" === K.value) {
-            const e = et.value;
-            if (!e) return 0;
-            const t = o.getActivePool(e) || [];
-            if (!Array.isArray(t) || 0 === t.length) return 0;
-            const a = Q.value instanceof Set ? Q.value : new Set;
-            let u = 0;
-            for (const l of t) l && l.key && (a.has(l.key) || (u += 1));
-            return 4 * u
-          }
           return Array.isArray(O.value) ? O.value.length : 0
         })),
         Be = e.computed((() => {
-          const e = V.value + Z.value;
+          const e = J.value; // 使用从云端获取的总局数
           return e ? Math.round(100 * V.value / e) : 0
         })),
         _e = e.computed((() => {
@@ -410,37 +336,36 @@ const h = () => "../../components/AppNavBar.js",
             const t = re.value || e;
             !q.value && e - t >= 12e4 && function () {
               if (q.value || L.value) return;
-              q.value = !0, L.value = !0, fe.value = !0;
+              q.value = !0;
               const e = Date.now() - (re.value || Date.now()),
                 t = e > 0 ? e : 12e4,
                 u = n.computeExprStats(y.value);
-              J.value += 1, Z.value += 1;
-              try {
-                a.pushRound({
-                  success: !1,
-                  timeMs: t,
-                  hintUsed: !!oe.value,
-                  retries: ce.value || 0,
-                  ops: u.ops,
-                  exprLen: u.exprLen,
-                  maxDepth: u.maxDepth,
-                  faceUseHigh: !!I.value,
-                  hand: {
-                    cards: (p.value || []).map((e => ({
-                      rank: e.rank,
-                      suit: e.suit
-                    })))
-                  },
-                  expr: at.value
-                }), Et()
-              } catch (ua) {}
-              if (et.value) try {
-                o.recordRoundResult({
-                  userId: et.value,
-                  nums: tt.value,
-                  success: !1
-                })
-              } catch (ua) {}
+
+              const roundData = {
+                success: !1,
+                timeMs: t,
+                hintUsed: !!oe.value,
+                retries: ce.value || 0,
+                ops: u.ops,
+                exprLen: u.exprLen,
+                maxDepth: u.maxDepth,
+                faceUseHigh: !!I.value,
+                hand: {
+                  cards: (p.value || []).map((e => ({
+                    rank: e.rank,
+                    suit: e.suit
+                  })))
+                },
+                expr: at.value
+              };
+
+              Ft({
+                ok: false,
+                expression: roundData.expr,
+                stats: u,
+                origin: k.value
+              });
+
               try {
                 Se("超过120秒，已记失败，可继续作答", 2e3)
               } catch (ua) {}
@@ -481,21 +406,12 @@ const h = () => "../../components/AppNavBar.js",
           proxy: Ve
         } = e.getCurrentInstance(),
         Ze = e.ref(!1),
-        et = e.computed((() => F.value && F.value.id ? F.value.id : "")),
+        et = e.computed((() => F.value && F.value._id ? F.value._id : "")),
         tt = e.computed((() => (p.value || []).map((e => e.rank)).sort(((e, t) => e - t))));
       e.watch([he, xe, pe], (() => {
         qe()
-      })), e.watch(et, ((t, a) => {
-        if (t === a) return;
-        const u = "mistakes" === K.value;
-        jt(u ? Date.now() : 0), !t && u ? (Lt("regular", {
-          scheduleNext: !1
-        }), jt(0), e.nextTick$1((() => {
-          Dt()
-        }))) : u && t && e.nextTick$1((() => {
-          Dt()
-        }))
       }));
+
       const at = e.computed((() => n.tokensToExpression(y.value, I.value))),
         ut = e.computed((() => `left:${Qe.value.x}px; top:${Qe.value.y}px;`)),
         lt = e.ref(1),
@@ -709,34 +625,21 @@ const h = () => "../../components/AppNavBar.js",
             x.value = null
           }
           if (!L.value) {
-            L.value = !0, J.value += 1, Z.value += 1;
-            try {
-              const e = n.computeExprStats(y.value);
-              a.pushRound({
-                success: !1,
-                timeMs: Date.now() - (re.value || Date.now()),
-                hintUsed: !0,
-                retries: ce.value || 0,
-                ops: e.ops,
-                exprLen: e.exprLen,
-                maxDepth: e.maxDepth,
-                faceUseHigh: !!I.value,
-                hand: {
-                  cards: (p.value || []).map((e => ({
-                    rank: e.rank,
-                    suit: e.suit
-                  })))
-                },
-                expr: at.value
-              }), Et()
-            } catch (ua) {}
-            if (et.value) try {
-              o.recordRoundResult({
-                userId: et.value,
-                nums: tt.value,
-                success: !1
-              })
-            } catch (ua) {}
+            const roundData = {
+              success: !1,
+              timeMs: Date.now() - (re.value || Date.now()),
+              hintUsed: !0,
+              retries: ce.value || 0,
+              ops: n.computeExprStats(y.value).ops,
+              exprLen: n.computeExprStats(y.value).exprLen,
+              maxDepth: n.computeExprStats(y.value).maxDepth,
+              faceUseHigh: !!I.value,
+              hand: {
+                cards: (p.value || []).map((e => ({ rank: e.rank, suit: e.suit })))
+              },
+              expr: at.value
+            };
+            g(!1, roundData);
           }
           if ("basic" === k.value) {
             fe.value = !0;
@@ -802,27 +705,9 @@ const h = () => "../../components/AppNavBar.js",
             ...e
           }, I.value = "jqk-11-12-13" === H.value.rankMode, K.value = H.value.deckSource, z.value = H.value.mixWeight, N.value = H.value.haptics, j.value = H.value.sfx, $.value = H.value.reducedMotion, it()
         }(), Rt();
-        const t = await async function () {
-          if ("mistakes" === K.value) {
-            const e = await Nt();
-            return e || await It()
-          }
-          if ("mix" === K.value) {
-            if (100 * Math.random() < je(z.value)) {
-              const e = await Nt({
-                silent: !0
-              });
-              if (e) return e
-            }
-            const e = await It();
-            return e || await Nt({
-              silent: !0
-            })
-          }
-          return await It()
-        }();
+        const t = await It();
         if (t) {
-          ve.value = !1, de.value = null, fe.value = !1, L.value = !1, q.value = !1, ce.value = 0, oe.value = !1, ne.value = "", le.value = "", Array.isArray(t.deck) && (O.value = t.deck), p.value = Array.isArray(t.cards) ? t.cards : [], Y.value = "mistake" === t.source ? "mistake" : "regular", G.value = "mistake" === t.source && t.mistakeKey || "", x.value = t.solution || null, y.value = [], m.value = [0, 0, 0, 0], L.value = !1, re.value = Date.now(), oe.value = !1, ce.value = 0, e.nextTick$1((() => {
+          ve.value = !1, de.value = null, fe.value = !1, L.value = !1, q.value = !1, ce.value = 0, oe.value = !1, ne.value = "", le.value = "", Array.isArray(t.deck) && (O.value = t.deck), p.value = Array.isArray(t.cards) ? t.cards : [], Y.value = "regular", G.value = "", x.value = t.solution || null, y.value = [], m.value = [0, 0, 0, 0], L.value = !1, re.value = Date.now(), oe.value = !1, ce.value = 0, e.nextTick$1((() => {
             it(), ot()
           }));
           try {
@@ -839,119 +724,6 @@ const h = () => "../../components/AppNavBar.js",
           deck: e.data.deck,
           solution: e.data.solution
         } : (qt(), null)
-      }
-      async function Nt(a = {}) {
-        const u = !!a.silent,
-          l = et.value;
-        if (!l) return u || (Se("请先选择用户", 1600), Lt("regular", {
-          scheduleNext: !1
-        })), null;
-        const r = o.getActivePool(l) || [];
-        if (!Array.isArray(r) || 0 === r.length) return u || await new Promise((t => {
-          const a = () => {
-            Lt("regular"), t(null)
-          };
-          try {
-            e.index.showModal({
-              title: "提示",
-              content: "无错题，切换到整副牌。",
-              confirmText: "OK",
-              showCancel: !1,
-              success: () => a(),
-              fail: () => a()
-            })
-          } catch (ua) {
-            a()
-          }
-        })), null;
-        const i = Q.value instanceof Set ? Q.value : new Set,
-          c = r.filter((e => e && e.key && !i.has(e.key)));
-        if (!c.length) return u || await new Promise((t => {
-          const a = () => {
-            $t(), t(null)
-          };
-          try {
-            e.index.showActionSheet({
-              title: "本轮错题已出完",
-              itemList: ["重新出题", "切换整副", "去统计"],
-              success: e => {
-                const a = "number" == typeof (null == e ? void 0 : e.tapIndex) ? e.tapIndex : -1;
-                0 === a ? $t() : 1 === a ? Lt("regular") : 2 === a ? Bt() : $t(), t(null)
-              },
-              fail: () => a()
-            })
-          } catch (ua) {
-            a()
-          }
-        })), null;
-        const s = c[Math.floor(Math.random() * c.length)],
-          v = function (e) {
-            const t = ["S", "H", "D", "C"];
-            return (Array.isArray(e) ? e : []).map(((e, a) => ({
-              rank: Number.isFinite(+e) ? Math.min(13, Math.max(1, Math.floor(+e))) : 1,
-              suit: t[a % t.length]
-            })))
-          }(Array.isArray(null == s ? void 0 : s.nums) ? s.nums : []);
-        let d = null;
-        try {
-          const e = v.map((e => n.mapCardRank(e.rank, I.value)));
-          d = 4 === e.length ? t.solve24(e) : null
-        } catch (ua) {
-          d = null
-        }
-        const f = new Set(i);
-        f.add(s.key), Q.value = f;
-        try {
-          Ue()
-        } catch (ua) {}
-        return {
-          source: "mistake",
-          cards: v,
-          deck: O.value,
-          solution: d,
-          mistakeKey: s.key
-        }
-      }
-
-      function jt(e = 0) {
-        Q.value = new Set, X.value = e, G.value = ""
-      }
-
-      function $t() {
-        jt(Date.now());
-        try {
-          Ue()
-        } catch (ua) {}
-        e.nextTick$1((() => {
-          "mistakes" === K.value && Dt()
-        }))
-      }
-
-      function Lt(t, a = {}) {
-        const u = Ne(t);
-        if (K.value !== u)
-          if ("mistakes" !== u || et.value) {
-            if (K.value = u, D.value = {
-                ...D.value,
-                deckSource: u
-              }, H.value = {
-                ...H.value,
-                deckSource: u
-              }, "mix" !== u && (D.value.mixWeight = z.value), !1 !== a.persist) {
-              try {
-                v.setGameplayPrefs({
-                  deckSource: u
-                })
-              } catch (ua) {}
-              Le()
-            }
-            "regular" === u && (!Array.isArray(O.value) || O.value.length < 4) && At();
-            try {
-              Ue()
-            } catch (ua) {}!1 !== a.scheduleNext && e.nextTick$1((() => {
-              Dt()
-            }))
-          } else Se("请先选择用户", 1600)
       }
 
       function qt() {
@@ -982,21 +754,53 @@ const h = () => "../../components/AppNavBar.js",
       }
 
       function Et() {
-        try {
-          const e = a.getCurrentUser && a.getCurrentUser();
-          if (!e || !e.id) return void(se.value = null);
-          const t = a.readStatsExtended && a.readStatsExtended(e.id);
-          if (t && (null == e ? void 0 : e.id)) try {
-            l.mergeCachedStatsExt({
-              [e.id]: t
-            })
-          } catch (ua) {}
-          const u = (t && Array.isArray(t.rounds) ? t.rounds.slice().reverse() : []).find((e => e && e.success && Number.isFinite(e.timeMs)));
-          se.value = u ? u.timeMs : null
-        } catch (ua) {
-          se.value = null
-        }
+        wx.cloud.callFunction({
+          name: 'data',
+          data: { action: 'getStats' }
+        }).then(res => {
+          if (res.result.code === 200) {
+            const stats = res.result.data;
+            J.value = stats.totals.total || 0;
+            V.value = stats.totals.success || 0;
+            Z.value = stats.totals.fail || 0;
+            const lastSuccessRound = (stats.rounds || []).filter(r => r.success && r.timeMs).pop();
+            se.value = lastSuccessRound ? lastSuccessRound.timeMs : null;
+          }
+        }).catch(console.error);
       }
+
+      const g = (success, roundData) => {
+          if (L.value) return; // 确保只记录一次
+          L.value = true;
+
+          wx.cloud.callFunction({
+              name: 'data',
+              data: {
+                  action: 'pushRound',
+                  data: roundData
+              }
+          }).then(res => {
+              if (res.result.code === 200) {
+                  console.log('回合数据上传成功');
+                  // 成功后立即更新本地统计信息
+                  J.value += 1;
+                  if (success) {
+                      V.value += 1;
+                  } else {
+                      Z.value += 1;
+                  }
+                  try {
+                    l.scheduleTabWarmup({ delay: 200 });
+                  } catch (ua) {}
+                  if (success) Et(); // 如果成功，重新获取最佳时间等
+              } else {
+                  console.error('回合数据上传失败', res.result.message);
+              }
+          }).catch(err => {
+              console.error('调用 pushRound 云函数失败', err);
+          });
+      };
+
 
       function Ft({
         ok: e,
@@ -1012,17 +816,10 @@ const h = () => "../../components/AppNavBar.js",
           h = Date.now() - (re.value || Date.now()),
           x = "pro" === c ? Math.max(0, (ce.value || 1) - 1) : 0,
           m = "pro" === c && ce.value || 0,
-          y = s && !e,
-          g = e => {
-            if (et.value) try {
-              o.recordRoundResult({
-                userId: et.value,
-                nums: tt.value,
-                success: e
-              })
-            } catch (ua) {}
-            try {
-              a.pushRound({
+          y = s && !e;
+
+        if (!L.value) { // 只有在未记录过的情况下才执行
+            const roundData = {
                 success: e,
                 timeMs: h,
                 hintUsed: !!oe.value,
@@ -1032,74 +829,19 @@ const h = () => "../../components/AppNavBar.js",
                 maxDepth: d.maxDepth,
                 faceUseHigh: !!I.value,
                 hand: {
-                  cards: (p.value || []).map((e => ({
-                    rank: e.rank,
-                    suit: e.suit
-                  })))
+                    cards: (p.value || []).map((card => ({
+                        rank: card.rank,
+                        suit: card.suit
+                    })))
                 },
                 expr: v
-              });
-              try {
-                l.scheduleTabWarmup({
-                  delay: 200
-                })
-              } catch (ua) {}
-              e && Et()
-            } catch (ua) {}
-          };
+            };
+            g(e, roundData);
+        }
+
         if (e) {
-          const e = q.value;
-          if (ne.value = "", e) {
-            if (ve.value && "success" === de.value) {
-              try {
-                Ue()
-              } catch (ua) {}
-              return
-            }
-            ve.value = !0, de.value = "success";
-            try {
-              ae.value = !0, setTimeout((() => {
-                ae.value = !1, Dt()
-              }), 500)
-            } catch (ua) {
-              Dt()
-            }
-            try {
-              Ue()
-            } catch (ua) {}
-            return
-          }
-          if ("basic" === c && fe.value) {
-            try {
-              ae.value = !0, setTimeout((() => {
-                ae.value = !1
-              }), 500)
-            } catch (ua) {}
-            try {
-              Ue()
-            } catch (ua) {}
-            return
-          }
-          if (ve.value) {
-            if ("success" === de.value) {
-              try {
-                Ue()
-              } catch (ua) {}
-              return
-            }
-            try {
-              ae.value = !0, setTimeout((() => {
-                ae.value = !1, Dt()
-              }), 500)
-            } catch (ua) {
-              Dt()
-            }
-            try {
-              Ue()
-            } catch (ua) {}
-            return
-          }
-          ve.value = !0, de.value = "success", L.value = !0, J.value += 1, V.value += 1, g(!0);
+          if (ne.value = "", ve.value) { return; } // 防止重复触发
+          ve.value = !0, de.value = "success";
           try {
             ae.value = !0, setTimeout((() => {
               ae.value = !1, Dt()
@@ -1112,6 +854,7 @@ const h = () => "../../components/AppNavBar.js",
           } catch (ua) {}
           return
         }
+
         const k = () => {
           try {
             f && "function" == typeof f.toString ? ne.value = "结果：" + f.toString() : ne.value = ""
@@ -1119,8 +862,9 @@ const h = () => "../../components/AppNavBar.js",
             ne.value = ""
           }
         };
+
         if (y) {
-          k(), fe.value || (fe.value = !0, de.value = "fail", L.value = !0, J.value += 1, Z.value += 1, g(!1));
+          k();
           try {
             ue.value = !0, setTimeout((() => {
               ue.value = !1
@@ -1130,7 +874,9 @@ const h = () => "../../components/AppNavBar.js",
             Ue()
           } catch (ua) {}
         } else {
-          k(), ve.value || (ve.value = !0, de.value = "fail", L.value = !0, J.value += 1, Z.value += 1, g(!1));
+          k();
+          if (ve.value) { return; }
+          ve.value = !0, de.value = "fail";
           try {
             ue.value = !0, setTimeout((() => {
               ue.value = !1
@@ -1149,38 +895,24 @@ const h = () => "../../components/AppNavBar.js",
         isUtExecuting = true;
         
         if (!L.value) {
-          L.value = !0, J.value += 1, Z.value += 1;
-          try {
-            const e = n.computeExprStats(y.value);
-            a.pushRound({
-              success: !1,
-              timeMs: Date.now() - (re.value || Date.now()),
-              hintUsed: !!oe.value,
-              retries: ce.value || 0,
-              ops: e.ops,
-              exprLen: e.exprLen,
-              maxDepth: e.maxDepth,
-              faceUseHigh: !!I.value,
-              hand: {
-                cards: (p.value || []).map((e => ({
-                  rank: e.rank,
-                  suit: e.suit
-                })))
-              },
-              expr: at.value
-            }), Et()
-          } catch (ua) {}
-          if (et.value) try {
-            o.recordRoundResult({
-              userId: et.value,
-              nums: tt.value,
-              success: !1
-            })
-          } catch (ua) {}
+          const roundData = {
+            success: !1,
+            timeMs: Date.now() - (re.value || Date.now()),
+            hintUsed: !!oe.value,
+            retries: ce.value || 0,
+            ops: n.computeExprStats(y.value).ops,
+            exprLen: n.computeExprStats(y.value).exprLen,
+            maxDepth: n.computeExprStats(y.value).maxDepth,
+            faceUseHigh: !!I.value,
+            hand: {
+              cards: (p.value || []).map((e => ({ rank: e.rank, suit: e.suit })))
+            },
+            expr: at.value
+          };
+          g(!1, roundData);
         }
         Dt();
         
-        // Reset execution flag after all operations are complete
         setTimeout(() => {
           isUtExecuting = false;
         }, 100);
@@ -1205,16 +937,10 @@ const h = () => "../../components/AppNavBar.js",
 
       function Wt() {
         try {
-          e.index.navigateTo({
+          e.index.reLaunch({
             url: "/pages/login/index"
           })
-        } catch (t) {
-          try {
-            e.index.reLaunch({
-              url: "/pages/login/index"
-            })
-          } catch (ua) {}
-        }
+        } catch (ua) {}
       }
 
       function Bt() {
@@ -1423,6 +1149,15 @@ const h = () => "../../components/AppNavBar.js",
         } catch (t) {}
       }
       return e.onMounted((() => {
+        const app = getApp();
+        if (!app.globalData.isLoggedIn || !app.globalData.userInfo) {
+          wx.reLaunch({
+            url: '/pages/login/index',
+          });
+          return;
+        }
+        F.value = app.globalData.userInfo;
+
         Le();
         try {
           if ("function" == typeof e.index.$on) {
@@ -1432,60 +1167,29 @@ const h = () => "../../components/AppNavBar.js",
             e.index.$on("tf24:mode-changed", dt)
           }
         } catch (ua) {}
-        a.ensureInit();
         try {
           e.index.hideTabBar && e.index.hideTabBar()
         } catch (ua) {}
-        try {
-          const t = a.getUsers && a.getUsers();
-          if (0 == (t && Array.isArray(t.list) ? t.list : []).length) {
-            try {
-              e.index.showModal({
-                title: "暂无用户",
-                content: "请先新建用户后再开始程序。",
-                confirmText: "去新建",
-                showCancel: !1,
-                success: () => {
-                  try {
-                    e.index.reLaunch({
-                      url: "/pages/login/index"
-                    })
-                  } catch (t) {
-                    try {
-                      e.index.navigateTo({
-                        url: "/pages/login/index"
-                      })
-                    } catch (ua) {}
-                  }
-                }
-              })
-            } catch (ua) {
-              try {
-                e.index.reLaunch({
-                  url: "/pages/login/index"
-                })
-              } catch (u) {
-                try {
-                  e.index.navigateTo({
-                    url: "/pages/login/index"
-                  })
-                } catch (l) {}
-              }
-            }
-            return
-          }
-        } catch (ua) {}
-        F.value = a.getCurrentUser() || null;
-        const t = Pe();
-        ft(), t || (At(), Dt()), setTimeout((() => {
+
+        ft(), At(), Dt(), setTimeout((() => {
           Ze.value = !0
         }), 0), e.nextTick$1((() => {
           aa(), it(), Zt(), ot()
         })), e.index.onWindowResize && e.index.onWindowResize((() => {
           aa(), it(), Zt(), ot()
-        })), Et(), Ke(), qe(), d.consumeAvatarRestoreNotice() && Se("头像文件丢失，已为你恢复为默认头像", 2e3)
+        })), Et(), Ke(), qe()
       })), e.onShow((() => {
-        Le(), F.value = a.getCurrentUser() || null, Pe(), ft(), Ke();
+        const app = getApp();
+        if (!app.globalData.isLoggedIn || !app.globalData.userInfo) {
+          wx.reLaunch({
+            url: '/pages/login/index',
+          });
+          return;
+        }
+        F.value = app.globalData.userInfo;
+
+        Le(), ft(), Ke();
+        Et();
         try {
           me()
         } catch (ua) {}
@@ -1495,7 +1199,6 @@ const h = () => "../../components/AppNavBar.js",
             delay: 180
           })
         } catch (ua) {}
-        d.consumeAvatarRestoreNotice() && Se("头像文件丢失，已为你恢复为默认头像", 2e3)
       })), e.onHide((() => {
         Ue(), ze(), Rt()
       })), e.onUnmounted((() => {
