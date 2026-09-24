@@ -1014,15 +1014,10 @@ const h = () => "../../components/AppNavBar.js",
           m = "pro" === c && ce.value || 0,
           y = s && !e,
           g = e => {
-            if (et.value) try {
-              o.recordRoundResult({
-                userId: et.value,
-                nums: tt.value,
-                success: e
-              })
-            } catch (ua) {}
-            try {
-              a.pushRound({
+            // Let the result state render before synchronous local-storage writes.
+            const userId = et.value,
+              nums = tt.value,
+              round = {
                 success: e,
                 timeMs: h,
                 hintUsed: !!oe.value,
@@ -1038,14 +1033,25 @@ const h = () => "../../components/AppNavBar.js",
                   })))
                 },
                 expr: v
-              });
-              try {
-                l.scheduleTabWarmup({
-                  delay: 200
+              };
+            setTimeout(() => {
+              if (userId) try {
+                o.recordRoundResult({
+                  userId,
+                  nums,
+                  success: e
                 })
               } catch (ua) {}
-              e && Et()
-            } catch (ua) {}
+              try {
+                a.pushRound(round);
+                try {
+                  l.scheduleTabWarmup({
+                    delay: 200
+                  })
+                } catch (ua) {}
+                e && Et()
+              } catch (ua) {}
+            }, 0)
           };
         if (e) {
           const e = q.value;
